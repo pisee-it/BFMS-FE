@@ -1,3 +1,71 @@
-/* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@source "../**/*.{html,ts}";
 @import "primeicons/primeicons.css";
+
+@theme {
+  --color-primary: #ffffff;
+  --color-bg-dark: #0a0a0a;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: #0a0a0a;
+  color: white;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Fix PrimeNG dark mode conflicts */
+.p-inputtext, .p-password input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.p-button {
+  background: white !important;
+  color: black !important;
+  border: none !important;
+}
+
+/* PrimeNG Menu Customization for Dark Mode */
+.p-menu {
+  background: rgba(20, 20, 20, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  padding: 8px !important;
+  min-width: 200px !important;
+
+  .p-menu-list {
+    .p-menu-item {
+      .p-menu-item-link {
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        color: #9ca3af !important;
+        transition: all 0.2s !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05) !important;
+          color: white !important;
+        }
+
+        .p-menu-item-icon {
+          color: #6b7280 !important;
+          margin-right: 12px !important;
+        }
+
+        .p-menu-item-label {
+          font-size: 14px !important;
+          font-weight: 500 !important;
+        }
+      }
+    }
+
+    .p-menu-separator {
+      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      margin: 6px 0 !important;
+    }
+  }
+}

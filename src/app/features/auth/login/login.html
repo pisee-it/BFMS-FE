@@ -1,0 +1,73 @@
+<div class="login-container">
+  <div class="login-card animate-fade-in">
+    <!-- Header -->
+    <div class="flex flex-col items-center mb-12 text-center">
+      <div class="logo-box mb-8">
+        <div class="logo-bg p-5 rounded-[24px] bg-white/[0.04] border border-white/[0.1] shadow-2xl inline-block">
+          <lucide-angular [img]="BusIcon" class="w-14 h-14 text-white"></lucide-angular>
+        </div>
+      </div>
+      <h1>BFMS System</h1>
+      <p class="subtitle">QUẢN LÝ XÍ NGHIỆP MYDINHBUS</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-8">
+      @if (errorMessage()) {
+        <p-message severity="error" [text]="errorMessage()!" styleClass="w-full mb-4"></p-message>
+      }
+
+      <div class="input-group">
+        <label for="username">Tên đăng nhập</label>
+        <div class="relative">
+          <div class="icon-wrapper">
+            <lucide-angular [img]="UserIcon" [size]="20"></lucide-angular>
+          </div>
+          <input
+            pInputText
+            id="username"
+            formControlName="username"
+            type="text"
+            placeholder="Nhập tài khoản"
+            [disabled]="isLoading()"
+          />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Mật khẩu</label>
+        <div class="relative">
+          <div class="icon-wrapper">
+            <lucide-angular [img]="LockIcon" [size]="20"></lucide-angular>
+          </div>
+          <p-password
+            id="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            placeholder="Nhập mật khẩu"
+            [disabled]="isLoading()"
+          ></p-password>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between px-2 pt-2" style="display: flex; justify-content: space-between;">
+        <div></div>
+        <a href="#" style="text-decoration: none; color: #6b7280; font-size: 14px; font-weight: 600;">Quên mật khẩu?</a>
+      </div>
+
+      <div class="pt-4">
+        <p-button
+          type="submit"
+          [label]="isLoading() ? 'Đang xử lý...' : 'Đăng nhập'"
+          [disabled]="loginForm.invalid || isLoading()"
+          [loading]="isLoading()"
+        ></p-button>
+      </div>
+
+      <div class="text-center pt-8" style="text-align: center; margin-top: 2rem;">
+        <p style="font-size: 10px; color: #4b5563; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">© 2026 Pisee IT · Enterprise Division</p>
+      </div>
+    </form>
+  </div>
+</div>
