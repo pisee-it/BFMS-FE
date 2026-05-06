@@ -1,0 +1,126 @@
+.sidebar {
+  width: 280px;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(40px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 20px 0 80px -20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100vh;
+  position: relative;
+  z-index: 50;
+
+  &.collapsed {
+    width: 88px;
+    
+    .nav-link {
+      padding: 12px 0;
+      justify-content: center;
+      margin: 0 12px 6px 12px;
+    }
+
+    .logo-section {
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: center;
+    }
+  }
+}
+
+.logo-section {
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.logo-circle {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+nav {
+  flex: 1;
+  padding: 0 1rem;
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar { width: 0; }
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  color: #9ca3af;
+  text-decoration: none;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    background: white;
+    color: black;
+    font-weight: 700;
+    box-shadow: 0 15px 30px -10px rgba(255, 255, 255, 0.2);
+    border-color: white;
+
+    .nav-icon {
+      color: black !important;
+    }
+  }
+
+  .nav-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-label {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.bottom-section {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

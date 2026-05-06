@@ -1,0 +1,55 @@
+<aside 
+  class="sidebar"
+  [class.collapsed]="isCollapsed()"
+>
+  <!-- Logo Section -->
+  <div class="logo-section">
+    <div class="logo-circle">
+      <lucide-angular [img]="BusIcon" class="w-6 h-6 text-white"></lucide-angular>
+    </div>
+    @if (!isCollapsed()) {
+      <span class="logo-text animate-fade-in">BFMS</span>
+    }
+  </div>
+
+  <!-- Menu Section -->
+  <nav>
+    @for (item of menuItems; track item.label) {
+      <a 
+        [routerLink]="item.route" 
+        routerLinkActive="active" 
+        class="nav-link"
+        [title]="isCollapsed() ? item.label : ''"
+      >
+        <lucide-angular [img]="item.icon" [size]="22" class="nav-icon"></lucide-angular>
+        @if (!isCollapsed()) {
+          <span class="nav-label">{{ item.label }}</span>
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Bottom Section -->
+  <div class="bottom-section">
+    @for (item of bottomItems; track item.label) {
+      <a 
+        [routerLink]="item.route" 
+        routerLinkActive="active" 
+        class="nav-link"
+        [title]="isCollapsed() ? item.label : ''"
+      >
+        <lucide-angular [img]="item.icon" [size]="22" class="nav-icon"></lucide-angular>
+        @if (!isCollapsed()) {
+          <span class="nav-label">{{ item.label }}</span>
+        }
+      </a>
+    }
+
+    <button class="nav-link" (click)="toggleSidebar()" style="width: 100%; border: none;">
+      <lucide-angular [img]="isCollapsed() ? ExpandIcon : CollapseIcon" [size]="22" class="nav-icon"></lucide-angular>
+      @if (!isCollapsed()) {
+        <span class="nav-label">Thu gọn</span>
+      }
+    </button>
+  </div>
+</aside>
