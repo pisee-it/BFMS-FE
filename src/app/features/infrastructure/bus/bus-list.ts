@@ -5,7 +5,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -26,7 +26,7 @@ import { BusRoute } from '../../../core/models/route.model';
     ButtonModule,
     InputTextModule,
     DialogModule,
-    DropdownModule,
+    SelectModule,
     InputNumberModule,
     CheckboxModule
   ],

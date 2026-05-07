@@ -150,7 +150,7 @@
 
         <div class="field col-span-2">
           <label for="routeId" class="font-semibold mb-1 block">Tuyến đường</label>
-          <p-dropdown
+          <p-select
             id="routeId"
             [options]="routes()"
             formControlName="routeId"
@@ -159,17 +159,17 @@
             placeholder="Chọn tuyến đường"
             [showClear]="true"
             class="rounded-xl"
-          ></p-dropdown>
+          ></p-select>
         </div>
 
         <div class="field">
           <label for="status" class="font-semibold mb-1 block">Trạng thái</label>
-          <p-dropdown
+          <p-select
             id="status"
             [options]="statuses"
             formControlName="status"
             class="rounded-xl"
-          ></p-dropdown>
+          ></p-select>
         </div>
 
         <div class="field flex items-center gap-2 pt-6">
