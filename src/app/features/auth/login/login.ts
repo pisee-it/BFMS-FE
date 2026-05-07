@@ -58,7 +58,15 @@ export class LoginComponent {
         error: (err) => {
           this.isLoading.set(false);
           this.loginForm.enable();
-          this.errorMessage.set('Sai tên đăng nhập hoặc mật khẩu!');
+
+          if (err.status === 401) {
+            this.errorMessage.set('Sai tên đăng nhập hoặc mật khẩu!');
+          } else if (err.status === 0) {
+            this.errorMessage.set('Không thể kết nối đến máy chủ. Vui lòng kiểm tra Backend!');
+          } else {
+            this.errorMessage.set('Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!');
+          }
+
           console.error('Login error:', err);
         }
       });

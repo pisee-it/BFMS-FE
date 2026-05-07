@@ -13,7 +13,6 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Nếu không đủ quyền, đẩy về dashboard hoặc trang thông báo lỗi
-  // Ở đây mặc định đẩy về dashboard
-  return router.createUrlTree(['/dashboard']);
+  // Nếu không đủ quyền, đẩy về trang login
+  return router.createUrlTree(['/login']);
 };

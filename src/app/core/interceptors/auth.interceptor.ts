@@ -7,9 +7,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.token;
 
-  // Clone request để thêm Header Authorization nếu có token
+  // Clone request để thêm Header Authorization nếu có token (ngoại trừ API login)
   let authReq = req;
-  if (token) {
+  const isLoginRequest = req.url.includes('/auth/login');
+
+  if (token && !isLoginRequest) {
     authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

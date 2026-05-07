@@ -1,0 +1,201 @@
+<div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 min-h-screen">
+  <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl overflow-hidden">
+    <p-table
+      #dt
+      [value]="buses()"
+      [lazy]="true"
+      (onLazyLoad)="loadBuses($event)"
+      [paginator]="true"
+      [rows]="10"
+      [totalRecords]="totalRecords()"
+      [loading]="loading()"
+      [globalFilterFields]="['licensePlate', 'busModel', 'manufacturer']"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+      [rowsPerPageOptions]="[10, 25, 50]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white m-0">Quản lý Xe Buýt</h2>
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <span class="p-input-icon-left w-full md:w-64">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="onGlobalFilter(dt, $event)"
+                placeholder="Tìm kiếm..."
+                class="w-full rounded-xl border-gray-200 focus:border-primary-500 focus:ring-primary-500"
+              />
+            </span>
+            <button
+              pButton
+              label="Thêm mới"
+              icon="pi pi-plus"
+              aria-label="Thêm mới xe buýt"
+              class="p-button-primary rounded-xl px-4 py-2"
+              (click)="openNew()"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="licensePlate" class="bg-gray-50 dark:bg-gray-700/50">Biển số <p-sortIcon field="licensePlate"></p-sortIcon></th>
+          <th pSortableColumn="busModel" class="bg-gray-50 dark:bg-gray-700/50">Model <p-sortIcon field="busModel"></p-sortIcon></th>
+          <th pSortableColumn="routeNumber" class="bg-gray-50 dark:bg-gray-700/50">Tuyến <p-sortIcon field="routeNumber"></p-sortIcon></th>
+          <th pSortableColumn="capacity" class="bg-gray-50 dark:bg-gray-700/50 text-center">Sức chứa <p-sortIcon field="capacity"></p-sortIcon></th>
+          <th pSortableColumn="status" class="bg-gray-50 dark:bg-gray-700/50">Trạng thái <p-sortIcon field="status"></p-sortIcon></th>
+          <th class="bg-gray-50 dark:bg-gray-700/50 text-center">Thao tác</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-bus>
+        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition-colors">
+          <td class="font-semibold">{{ bus.licensePlate }}</td>
+          <td>
+            <div class="flex flex-col">
+              <span class="font-medium">{{ bus.busModel }}</span>
+              <span class="text-xs text-gray-500">{{ bus.manufacturer }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="px-2 py-1 bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 rounded text-xs font-bold">
+              {{ bus.routeNumber || 'N/A' }}
+            </span>
+          </td>
+          <td class="text-center">{{ bus.capacity }}</td>
+          <td>
+            <span [class]="getStatusClass(bus.status)">
+              {{ bus.status }}
+            </span>
+          </td>
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                aria-label="Chỉnh sửa xe buýt"
+                class="p-button-text p-button-rounded p-button-info"
+                (click)="editBus(bus)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                aria-label="Xóa xe buýt"
+                class="p-button-text p-button-rounded p-button-danger"
+                (click)="deleteBus(bus)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-8 text-gray-500">Không tìm thấy dữ liệu xe buýt.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Dialog Thêm/Sửa -->
+  <p-dialog
+    [(visible)]="busDialog"
+    [style]="{ width: '500px' }"
+    header="Chi tiết Xe Buýt"
+    [modal]="true"
+    styleClass="p-fluid"
+    [draggable]="false"
+    [resizable]="false"
+    class="custom-dialog"
+  >
+    <ng-template pTemplate="content">
+      <form [formGroup]="busForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="field col-span-2">
+          <label for="licensePlate" class="font-semibold mb-1 block">Biển số xe</label>
+          <input
+            type="text"
+            pInputText
+            id="licensePlate"
+            formControlName="licensePlate"
+            placeholder="VD: 29A-12345"
+            class="rounded-xl"
+          />
+          @if (busForm.get('licensePlate')?.invalid && busForm.get('licensePlate')?.touched) {
+            <small class="p-error">Vui lòng nhập biển số xe.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="busModel" class="font-semibold mb-1 block">Model</label>
+          <input type="text" pInputText id="busModel" formControlName="busModel" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label for="manufacturer" class="font-semibold mb-1 block">Nhà sản xuất</label>
+          <input type="text" pInputText id="manufacturer" formControlName="manufacturer" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label for="capacity" class="font-semibold mb-1 block">Sức chứa</label>
+          <p-inputNumber id="capacity" formControlName="capacity" [showButtons]="true" [min]="0" class="rounded-xl"></p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="yom" class="font-semibold mb-1 block">Năm sản xuất</label>
+          <p-inputNumber id="yom" formControlName="yom" [useGrouping]="false" class="rounded-xl"></p-inputNumber>
+        </div>
+
+        <div class="field col-span-2">
+          <label for="routeId" class="font-semibold mb-1 block">Tuyến đường</label>
+          <p-dropdown
+            id="routeId"
+            [options]="routes()"
+            formControlName="routeId"
+            optionLabel="routeNumber"
+            optionValue="id"
+            placeholder="Chọn tuyến đường"
+            [showClear]="true"
+            class="rounded-xl"
+          ></p-dropdown>
+        </div>
+
+        <div class="field">
+          <label for="status" class="font-semibold mb-1 block">Trạng thái</label>
+          <p-dropdown
+            id="status"
+            [options]="statuses"
+            formControlName="status"
+            class="rounded-xl"
+          ></p-dropdown>
+        </div>
+
+        <div class="field flex items-center gap-2 pt-6">
+          <p-checkbox formControlName="isAdvertised" [binary]="true" inputId="isAdvertised"></p-checkbox>
+          <label for="isAdvertised" class="cursor-pointer">Có quảng cáo</label>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Hủy"
+        icon="pi pi-times"
+        class="p-button-text rounded-xl"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        label="Lưu"
+        icon="pi pi-check"
+        class="p-button-primary rounded-xl"
+        (click)="saveBus()"
+        [disabled]="busForm.invalid"
+      ></button>
+    </ng-template>
+  </p-dialog>
+
+</div>

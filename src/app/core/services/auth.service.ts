@@ -53,7 +53,7 @@ export class AuthService {
     const role = localStorage.getItem('role');
 
     if (token && role) {
-      this.currentUserRole.set(role);
+      this.currentUserRole.set(role.replace('ROLE_', ''));
     }
   }
 
@@ -61,9 +61,10 @@ export class AuthService {
    * Lưu thông tin phiên làm việc
    */
   private setSession(authResponse: AuthResponse): void {
-    this.currentUserRole.set(authResponse.role);
+    const role = authResponse.role.replace('ROLE_', '');
+    this.currentUserRole.set(role);
     localStorage.setItem('accessToken', authResponse.accessToken);
-    localStorage.setItem('role', authResponse.role);
+    localStorage.setItem('role', role);
   }
 
   /**

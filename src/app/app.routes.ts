@@ -19,6 +19,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dashboard/dashboard').then(m => m.DashboardComponent)
       },
       {
+        path: 'buses',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () => import('./features/infrastructure/bus/bus-list').then(m => m.BusListComponent)
+      },
+      {
+        path: 'routes',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () => import('./features/infrastructure/route/route-list').then(m => m.RouteListComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
