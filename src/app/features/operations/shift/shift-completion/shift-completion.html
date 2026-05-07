@@ -1,0 +1,124 @@
+<div class="min-h-screen bg-[#121212] p-4 text-gray-100">
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="rounded-xl bg-blue-500/20 p-2 text-blue-400">
+        <lucide-angular [img]="TicketIcon" size="24"></lucide-angular>
+      </div>
+      <h1 class="text-xl font-bold tracking-tight">Chốt Ca</h1>
+    </div>
+    <button (click)="cancel()" class="text-sm text-gray-500 hover:text-white">Hủy</button>
+  </div>
+
+  @if (shiftInfo()) {
+    <!-- Shift Info Card -->
+    <div class="mb-6 overflow-hidden rounded-2xl border border-gray-800 bg-[#1e1e1e]">
+      <div class="bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white/90">
+        Chi tiết ca chạy
+      </div>
+      <div class="p-4">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-2xl font-black text-white">{{ shiftInfo()?.licensePlate }}</div>
+            <div class="flex items-center gap-2 text-sm text-gray-400">
+              <lucide-angular [img]="BusIcon" size="14"></lucide-angular>
+              <span>{{ routeInfo()?.routeNumber }} • Ca {{ shiftInfo()?.shiftOrder }}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-gray-500 uppercase">Hướng</div>
+            <div class="text-sm font-medium text-blue-400">
+              {{ shiftInfo()?.direction === 1 ? 'A → B' : 'B → A' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Form -->
+    <div class="space-y-6">
+      <!-- Single Tickets -->
+      <div class="rounded-2xl border border-gray-800 bg-[#1e1e1e] p-5 shadow-xl">
+        <div class="mb-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 text-orange-400">
+              <lucide-angular [img]="TicketIcon" size="18"></lucide-angular>
+            </div>
+            <span class="font-semibold text-gray-200">Số vé lượt</span>
+          </div>
+          <span class="text-xs font-medium text-gray-500">Giá: {{ ticketPrice() | number }} VNĐ</span>
+        </div>
+        
+        <p-inputNumber 
+          [(ngModel)]="totalSingleTickets" 
+          [showButtons]="true" 
+          buttonLayout="horizontal" 
+          spinnerMode="horizontal" 
+          inputId="singleTickets"
+          decrementButtonClass="p-button-secondary bg-gray-800 border-none text-white hover:bg-gray-700" 
+          incrementButtonClass="p-button-secondary bg-gray-800 border-none text-white hover:bg-gray-700" 
+          incrementButtonIcon="pi pi-plus" 
+          decrementButtonIcon="pi pi-minus"
+          [min]="0"
+          styleClass="w-full"
+          class="w-full"
+        ></p-inputNumber>
+      </div>
+
+      <!-- Monthly Tickets -->
+      <div class="rounded-2xl border border-gray-800 bg-[#1e1e1e] p-5 shadow-xl">
+        <div class="mb-4 flex items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400">
+            <lucide-angular [img]="InfoIcon" size="18"></lucide-angular>
+          </div>
+          <span class="font-semibold text-gray-200">Số vé tháng</span>
+        </div>
+        
+        <p-inputNumber 
+          [(ngModel)]="totalMonthlyTickets" 
+          [showButtons]="true" 
+          buttonLayout="horizontal" 
+          spinnerMode="horizontal" 
+          inputId="monthlyTickets"
+          decrementButtonClass="p-button-secondary bg-gray-800 border-none text-white hover:bg-gray-700" 
+          incrementButtonClass="p-button-secondary bg-gray-800 border-none text-white hover:bg-gray-700" 
+          incrementButtonIcon="pi pi-plus" 
+          decrementButtonIcon="pi pi-minus"
+          [min]="0"
+          styleClass="w-full"
+          class="w-full"
+        ></p-inputNumber>
+      </div>
+
+      <!-- Revenue Summary -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 shadow-2xl shadow-blue-500/20">
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 text-white/70">
+            <lucide-angular [img]="MoneyIcon" size="16"></lucide-angular>
+            <span class="text-xs font-bold uppercase tracking-widest">Tổng doanh thu dự tính</span>
+          </div>
+          <div class="mt-2 text-4xl font-black text-white">
+            {{ revenue() | number }} <span class="text-lg font-normal opacity-70">VNĐ</span>
+          </div>
+        </div>
+        <!-- Decorative Circle -->
+        <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        (click)="submit()"
+        class="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-white py-4 font-bold text-black transition-all active:scale-95 disabled:opacity-50"
+        [disabled]="totalSingleTickets() === 0 && totalMonthlyTickets() === 0"
+      >
+        <span>Xác nhận chốt ca</span>
+        <lucide-angular [img]="BusIcon" size="20" class="transition-transform group-hover:translate-x-1"></lucide-angular>
+      </button>
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center py-20 text-gray-500">
+      <div class="mb-4 h-12 w-12 animate-pulse rounded-full bg-gray-800"></div>
+      <p>Đang tải thông tin ca chạy...</p>
+    </div>
+  }
+</div>

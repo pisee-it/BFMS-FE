@@ -42,6 +42,18 @@ export const routes: Routes = [
           {
             path: 'shifts',
             loadComponent: () => import('./features/operations/shift/shift-scheduling').then(m => m.ShiftSchedulingComponent)
+          },
+          {
+            path: 'shift-selection',
+            canActivate: [roleGuard],
+            data: { roles: ['ADMIN', 'STAFF'] },
+            loadComponent: () => import('./features/operations/shift/shift-selection/shift-selection').then(m => m.ShiftSelectionComponent)
+          },
+          {
+            path: 'shift-completion/:routeId/:shiftId',
+            canActivate: [roleGuard],
+            data: { roles: ['ADMIN', 'STAFF'] },
+            loadComponent: () => import('./features/operations/shift/shift-completion/shift-completion').then(m => m.ShiftCompletionComponent)
           }
         ]
       },
