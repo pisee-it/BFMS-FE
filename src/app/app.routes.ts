@@ -31,6 +31,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/infrastructure/route/route-list').then(m => m.RouteListComponent)
       },
       {
+        path: 'operations',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        children: [
+          {
+            path: 'nodes',
+            loadComponent: () => import('./features/operations/node/node-management').then(m => m.NodeManagementComponent)
+          },
+          {
+            path: 'shifts',
+            loadComponent: () => import('./features/operations/shift/shift-scheduling').then(m => m.ShiftSchedulingComponent)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
