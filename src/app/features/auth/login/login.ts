@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoginRequest } from '../../../core/models/auth.model';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -48,13 +49,15 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.isLoading.set(true);
       this.errorMessage.set(null);
+      this.loginForm.disable();
 
-      this.authService.login(this.loginForm.value).subscribe({
+      this.authService.login(this.loginForm.getRawValue() as LoginRequest).subscribe({
         next: () => {
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.isLoading.set(false);
+          this.loginForm.enable();
           this.errorMessage.set('Sai tên đăng nhập hoặc mật khẩu!');
           console.error('Login error:', err);
         }
