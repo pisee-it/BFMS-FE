@@ -3,8 +3,13 @@ import { Routes } from '@angular/router';
 export const ADVERTISING_ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'companies',
+    redirectTo: 'contracts',
     pathMatch: 'full'
+  },
+  {
+    path: 'contracts',
+    loadComponent: () => import('@features/advertising/contract-management/contract-management.component').then(m => m.ContractManagementComponent),
+    data: { title: 'Danh sách Hợp đồng' }
   },
   {
     path: 'companies',

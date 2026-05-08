@@ -1,0 +1,85 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Quản lý Hợp đồng Quảng cáo</h1>
+    <p-button label="Đăng ký Hợp đồng" icon="pi pi-plus" routerLink="/advertising/contracts/new" severity="primary"></p-button>
+  </div>
+
+  <div class="card bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden shadow-xl">
+    <p-table
+      #dt
+      [value]="contracts()"
+      [lazy]="true"
+      (onLazyLoad)="loadContracts($event)"
+      [paginator]="true"
+      [rows]="10"
+      [totalRecords]="totalRecords()"
+      [loading]="loading()"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-gridlines"
+      [responsiveLayout]="'scroll'"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Đối tác</th>
+          <th>Tuyến</th>
+          <th>Thời hạn</th>
+          <th class="text-right">Đơn giá/Xe</th>
+          <th class="text-center">Số xe</th>
+          <th class="text-center">Trạng thái</th>
+          <th style="width: 10rem">Thao tác</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-contract>
+        <tr>
+          <td>
+            <div class="font-bold text-primary">{{ contract.companyName }}</div>
+            <div class="text-xs opacity-60">ID: {{ contract.companyId }}</div>
+          </td>
+          <td>
+            <div class="font-medium">{{ contract.routeNumber }}</div>
+          </td>
+          <td>
+            <div class="text-sm">Từ: {{ contract.startDate | date: 'dd/MM/yyyy' }}</div>
+            <div class="text-sm">Đến: {{ contract.endDate | date: 'dd/MM/yyyy' }}</div>
+          </td>
+          <td class="text-right">
+            {{ contract.pricePerBus | currency: 'VND':'symbol':'1.0-0':'vi-VN' }}
+          </td>
+          <td class="text-center">
+            {{ contract.busQuantity }}
+          </td>
+          <td class="text-center">
+            <p-tag [value]="getStatusLabel(contract.approvalStatus)" [severity]="getStatusSeverity(contract.approvalStatus)"></p-tag>
+          </td>
+          <td>
+            <div class="flex gap-2 justify-center">
+              <p-button icon="pi pi-file" [rounded]="true" [text]="true" severity="info" (onClick)="viewFile(contract.contractFileUrl)" pTooltip="Xem bản scan"></p-button>
+              <p-button 
+                *ngIf="contract.approvalStatus !== 'DELETE_REQUESTED'"
+                icon="pi pi-trash" 
+                [rounded]="true" 
+                [text]="true" 
+                severity="danger" 
+                (onClick)="requestDelete(contract)" 
+                pTooltip="Yêu cầu xóa"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-8 text-gray-500">
+            <div class="flex flex-col items-center gap-3">
+              <i class="pi pi-file-excel text-4xl opacity-20"></i>
+              <span>Không tìm thấy hợp đồng nào.</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+  <p-toast></p-toast>
+</div>
