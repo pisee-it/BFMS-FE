@@ -7,6 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
+import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ReportService } from '@core/services/report.service';
@@ -29,6 +30,7 @@ import { finalize } from 'rxjs';
     CardModule,
     ChartModule,
     ToastModule,
+    SkeletonModule,
     CurrencyPipe,
     DatePipe,
     DecimalPipe,
