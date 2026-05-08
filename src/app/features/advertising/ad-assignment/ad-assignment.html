@@ -1,0 +1,100 @@
+<div class="p-6 max-w-2xl mx-auto">
+  <div class="flex items-center gap-4 mb-8">
+    <p-button icon="pi pi-arrow-left" [text]="true" [rounded]="true" (onClick)="goBack()"></p-button>
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Gán Quảng cáo lên Xe buýt</h1>
+  </div>
+
+  <div class="card bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+    <!-- Decorative element -->
+    <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
+    
+    <form [formGroup]="assignmentForm" (ngSubmit)="saveAssignment()" class="flex flex-col gap-6 relative z-10">
+      
+      <div class="field">
+        <label for="adContractId" class="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+          Chọn Hợp đồng Quảng cáo <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="adContractId"
+          formControlName="adContractId"
+          [options]="contracts()"
+          optionLabel="id"
+          optionValue="id"
+          placeholder="Chọn mã hợp đồng đã duyệt"
+          [filter]="true"
+          class="w-full"
+        >
+          <ng-template let-contract pTemplate="item">
+            <div class="flex flex-col">
+              <span class="font-bold">HĐ #{{ contract.id }} - {{ contract.companyName }}</span>
+              <small class="text-gray-500">Tuyến: {{ contract.routeNumber }} | SL Xe: {{ contract.busQuantity }}</small>
+            </div>
+          </ng-template>
+        </p-select>
+        <small class="text-red-500 block mt-1" *ngIf="submitted && assignmentForm.get('adContractId')?.errors?.['required']">
+          Vui lòng chọn một hợp đồng.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="busId" class="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+          Chọn Xe buýt mục tiêu <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="busId"
+          formControlName="busId"
+          [options]="buses()"
+          optionLabel="licensePlate"
+          optionValue="id"
+          placeholder="Chọn biển số xe đang hoạt động"
+          [filter]="true"
+          class="w-full"
+        >
+          <ng-template let-bus pTemplate="item">
+            <div class="flex items-center gap-3">
+              <i class="pi pi-truck text-primary"></i>
+              <div class="flex flex-col">
+                <span class="font-bold">{{ bus.licensePlate }}</span>
+                <small class="text-gray-500">{{ bus.busModel }} | Tuyến: {{ bus.routeNumber }}</small>
+              </div>
+            </div>
+          </ng-template>
+        </p-select>
+        <small class="text-red-500 block mt-1" *ngIf="submitted && assignmentForm.get('busId')?.errors?.['required']">
+          Vui lòng chọn một xe buýt.
+        </small>
+      </div>
+
+      <div class="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-xl">
+        <div class="flex gap-3 text-sm text-gray-600 dark:text-gray-400">
+          <i class="pi pi-info-circle text-primary mt-1"></i>
+          <p>
+            Việc gán quảng cáo sẽ cập nhật trạng thái của xe buýt. Chỉ những xe buýt <strong>đang hoạt động</strong> và 
+            <strong>chưa có quảng cáo</strong> mới nên được chọn để đảm bảo tính nhất quán của dữ liệu.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4 mt-6">
+        <p-button 
+          label="Hủy bỏ" 
+          severity="secondary" 
+          [outlined]="true" 
+          (onClick)="goBack()"
+          class="flex-1 md:flex-none"
+        ></p-button>
+        <p-button 
+          type="submit" 
+          label="Thực hiện gán" 
+          icon="pi pi-check"
+          severity="primary" 
+          [loading]="loading()"
+          class="flex-1 md:flex-none"
+        ></p-button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<p-toast></p-toast>

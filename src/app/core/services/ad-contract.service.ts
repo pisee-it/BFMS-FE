@@ -10,10 +10,14 @@ export class AdContractService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = '/api/v1/ads/contracts';
 
-  getContracts(page: number = 0, size: number = 10): Observable<any> {
-    const params = new HttpParams()
+  getContracts(page: number = 0, size: number = 10, status?: string): Observable<any> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
+
+    if (status) {
+      params = params.set('status', status);
+    }
 
     return this.http.get<any>(this.apiUrl, { params });
   }

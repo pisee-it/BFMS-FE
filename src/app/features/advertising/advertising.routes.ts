@@ -20,5 +20,10 @@ export const ADVERTISING_ROUTES: Routes = [
     path: 'contracts/new',
     loadComponent: () => import('@features/advertising/contract-registration/contract-registration.component').then(m => m.ContractRegistrationComponent),
     data: { title: 'Đăng ký Hợp đồng' }
+  },
+  {
+    path: 'assignments',
+    loadComponent: () => import('@features/advertising/ad-assignment/ad-assignment.component').then(m => m.AdAssignmentComponent),
+    data: { title: 'Gán Quảng cáo' }
   }
 ];
