@@ -1,0 +1,102 @@
+<div class="p-6 max-w-4xl mx-auto">
+  <div class="flex items-center gap-4 mb-6">
+    <p-button icon="pi pi-arrow-left" [text]="true" [rounded]="true" (onClick)="goBack()"></p-button>
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Đăng ký Hợp đồng Quảng cáo mới</h1>
+  </div>
+
+  <div class="card bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-xl">
+    <form [formGroup]="contractForm" (ngSubmit)="saveContract()" class="p-fluid">
+      
+      <!-- Section: Thông tin Đối tác & Tuyến -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4 border-b border-white/10 pb-2 text-primary">1. Thông tin chung</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="field">
+            <label for="companyId" class="block mb-2 font-medium">Đối tác Quảng cáo <span class="text-red-500">*</span></label>
+            <p-select
+              id="companyId"
+              formControlName="companyId"
+              [options]="companies()"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Chọn đối tác"
+              [filter]="true"
+            ></p-select>
+            <small class="text-red-500" *ngIf="submitted && contractForm.get('companyId')?.errors?.['required']">Vui lòng chọn đối tác.</small>
+          </div>
+          <div class="field">
+            <label for="routeId" class="block mb-2 font-medium">Tuyến xe áp dụng <span class="text-red-500">*</span></label>
+            <p-select
+              id="routeId"
+              formControlName="routeId"
+              [options]="routes()"
+              optionLabel="routeNumber"
+              optionValue="id"
+              placeholder="Chọn tuyến xe"
+              [filter]="true"
+            >
+              <ng-template let-route pTemplate="item">
+                <div>{{ route.routeNumber }} ({{ route.stopA }} - {{ route.stopB }})</div>
+              </ng-template>
+            </p-select>
+            <small class="text-red-500" *ngIf="submitted && contractForm.get('routeId')?.errors?.['required']">Vui lòng chọn tuyến xe.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Chi tiết Hợp đồng -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4 border-b border-white/10 pb-2 text-primary">2. Chi tiết hợp đồng</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="field">
+            <label for="startDate" class="block mb-2 font-medium">Ngày bắt đầu <span class="text-red-500">*</span></label>
+            <p-datepicker id="startDate" formControlName="startDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500" *ngIf="submitted && contractForm.get('startDate')?.errors?.['required']">Ngày bắt đầu là bắt buộc.</small>
+          </div>
+          <div class="field">
+            <label for="endDate" class="block mb-2 font-medium">Ngày kết thúc <span class="text-red-500">*</span></label>
+            <p-datepicker id="endDate" formControlName="endDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500" *ngIf="submitted && contractForm.get('endDate')?.errors?.['required']">Ngày kết thúc là bắt buộc.</small>
+          </div>
+          <div class="field">
+            <label for="pricePerBus" class="block mb-2 font-medium">Đơn giá/Xe (VNĐ) <span class="text-red-500">*</span></label>
+            <p-inputNumber id="pricePerBus" formControlName="pricePerBus" mode="currency" currency="VND" locale="vi-VN"></p-inputNumber>
+          </div>
+          <div class="field">
+            <label for="busQuantity" class="block mb-2 font-medium">Số lượng xe <span class="text-red-500">*</span></label>
+            <p-inputNumber id="busQuantity" formControlName="busQuantity" [showButtons]="true" [min]="1"></p-inputNumber>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Tệp đính kèm -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4 border-b border-white/10 pb-2 text-primary">3. Tệp đính kèm</h2>
+        <div class="field">
+          <label class="block mb-2 font-medium">Bản scan hợp đồng (.pdf, .jpg, .png) <span class="text-red-500">*</span></label>
+          <p-fileupload
+            mode="basic"
+            chooseLabel="Chọn tệp"
+            [auto]="true"
+            accept="image/*,application/pdf"
+            [maxFileSize]="10000000"
+            (onSelect)="onUpload($event)"
+            [disabled]="uploadingFile()"
+          ></p-fileupload>
+          <div *ngIf="uploadedFileUrl()" class="mt-2 flex items-center gap-2 text-green-500">
+            <i class="pi pi-check-circle"></i>
+            <span>Đã tải lên tệp: <a [href]="uploadedFileUrl()" target="_blank" class="underline font-medium">Xem tệp</a></span>
+          </div>
+          <small class="text-red-500" *ngIf="submitted && !uploadedFileUrl()">Vui lòng tải lên bản scan hợp đồng.</small>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-8">
+        <p-button label="Hủy bỏ" severity="secondary" [outlined]="true" (onClick)="goBack()"></p-button>
+        <p-button type="submit" label="Gửi yêu cầu hợp đồng" severity="primary" [loading]="loading()"></p-button>
+      </div>
+
+    </form>
+  </div>
+  <p-toast></p-toast>
+</div>
