@@ -15,6 +15,7 @@ import { BusService } from '@core/services/bus.service';
 import { RouteService } from '@core/services/route.service';
 import { Bus, BusStatus, BusRequest } from '@core/models/bus.model';
 import { BusRoute } from '@core/models/route.model';
+import { SkeletonTableComponent } from '@shared/components/skeleton-table/skeleton-table';
 
 @Component({
   selector: 'app-bus-list',
@@ -28,7 +29,8 @@ import { BusRoute } from '@core/models/route.model';
     DialogModule,
     SelectModule,
     InputNumberModule,
-    CheckboxModule
+    CheckboxModule,
+    SkeletonTableComponent
   ],
   templateUrl: './bus-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush

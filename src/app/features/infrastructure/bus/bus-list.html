@@ -1,19 +1,23 @@
 <div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 min-h-screen">
-  <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl overflow-hidden">
-    <p-table
-      #dt
-      [value]="buses()"
-      [lazy]="true"
-      (onLazyLoad)="loadBuses($event)"
-      [paginator]="true"
-      [rows]="10"
-      [totalRecords]="totalRecords()"
-      [loading]="loading()"
-      [globalFilterFields]="['licensePlate', 'busModel', 'manufacturer']"
-      responsiveLayout="scroll"
-      styleClass="p-datatable-sm"
-      [rowsPerPageOptions]="[10, 25, 50]"
-    >
+  @if (loading() && buses().length === 0) {
+    <app-skeleton-table [rows]="10" [columns]="6"></app-skeleton-table>
+  } @else {
+    <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl overflow-hidden">
+      <p-table
+        #dt
+        [value]="buses()"
+        [lazy]="true"
+        (onLazyLoad)="loadBuses($event)"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [loading]="false"
+        [globalFilterFields]="['licensePlate', 'busModel', 'manufacturer']"
+        responsiveLayout="scroll"
+        styleClass="p-datatable-sm"
+        [rowsPerPageOptions]="[10, 25, 50]"
+      >
+  }
       <ng-template pTemplate="caption">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <h2 class="text-2xl font-bold text-gray-800 dark:text-white m-0">Quản lý Xe Buýt</h2>
@@ -97,8 +101,9 @@
           <td colspan="6" class="text-center py-8 text-gray-500">Không tìm thấy dữ liệu xe buýt.</td>
         </tr>
       </ng-template>
-    </p-table>
-  </div>
+      </p-table>
+    </div>
+  }
 
   <!-- Dialog Thêm/Sửa -->
   <p-dialog

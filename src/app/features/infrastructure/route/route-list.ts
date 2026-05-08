@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RouteService } from '@core/services/route.service';
 import { BusRoute, RouteRequest } from '@core/models/route.model';
+import { SkeletonTableComponent } from '@shared/components/skeleton-table/skeleton-table';
 
 @Component({
   selector: 'app-route-list',
@@ -25,7 +26,8 @@ import { BusRoute, RouteRequest } from '@core/models/route.model';
     TextareaModule,
     DialogModule,
     InputNumberModule,
-    DecimalPipe
+    DecimalPipe,
+    SkeletonTableComponent
   ],
   templateUrl: './route-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush

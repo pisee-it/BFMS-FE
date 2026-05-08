@@ -13,6 +13,7 @@ import { ReportService } from '@core/services/report.service';
 import { RouteService } from '@core/services/route.service';
 import { RevenueResponse, RouteReportResponse } from '@core/models/revenue-report.model';
 import { BusRoute } from '@core/models/route.model';
+import { SkeletonTableComponent } from '@shared/components/skeleton-table/skeleton-table';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -30,7 +31,8 @@ import { finalize } from 'rxjs';
     ToastModule,
     CurrencyPipe,
     DatePipe,
-    DecimalPipe
+    DecimalPipe,
+    SkeletonTableComponent
   ],
   templateUrl: './reporting.html',
   styleUrl: './reporting.scss',
