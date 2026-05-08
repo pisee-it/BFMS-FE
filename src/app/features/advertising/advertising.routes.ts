@@ -25,5 +25,10 @@ export const ADVERTISING_ROUTES: Routes = [
     path: 'assignments',
     loadComponent: () => import('@features/advertising/ad-assignment/ad-assignment.component').then(m => m.AdAssignmentComponent),
     data: { title: 'Gán Quảng cáo' }
+  },
+  {
+    path: 'files',
+    loadComponent: () => import('@features/advertising/file-management/file-management.component').then(m => m.FileManagementComponent),
+    data: { title: 'Thư viện Tệp tin' }
   }
 ];

@@ -1,0 +1,78 @@
+<div class="p-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Thư viện Tệp tin & Decal</h1>
+      <p class="text-gray-500 dark:text-gray-400">Quản lý và xem lại các tài liệu, hình ảnh quảng cáo đã tải lên hệ thống.</p>
+    </div>
+    <div class="flex bg-white/5 backdrop-blur-lg border border-white/10 p-1 rounded-xl">
+      <p-button 
+        label="Tất cả" 
+        [text]="filterType() !== 'all'" 
+        [rounded]="true" 
+        size="small" 
+        (onClick)="setFilter('all')"
+        class="px-2"
+      ></p-button>
+      <p-button 
+        label="Hợp đồng" 
+        [text]="filterType() !== 'contract'" 
+        [rounded]="true" 
+        size="small" 
+        (onClick)="setFilter('contract')"
+        class="px-2"
+      ></p-button>
+      <p-button 
+        label="Decal" 
+        [text]="filterType() !== 'decal'" 
+        [rounded]="true" 
+        size="small" 
+        (onClick)="setFilter('decal')"
+        class="px-2"
+      ></p-button>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center items-center h-64">
+    <i class="pi pi-spin pi-spinner text-4xl text-primary"></i>
+  </div>
+
+  <div *ngIf="!loading() && files().length === 0" class="flex flex-col items-center justify-center h-64 text-gray-400">
+    <i class="pi pi-folder-open text-6xl mb-4"></i>
+    <p class="text-xl">Chưa có tệp tin nào được tải lên.</p>
+  </div>
+
+  <div *ngIf="!loading() && files().length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div *ngFor="let file of files()" class="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+      
+      <!-- Preview Area -->
+      <div class="aspect-video bg-gray-900/50 relative overflow-hidden flex items-center justify-center">
+        <img *ngIf="isImage(file.url)" [src]="file.url" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" [alt]="file.name">
+        <div *ngIf="!isImage(file.url)" class="flex flex-col items-center gap-2 text-primary">
+          <i class="pi pi-file-pdf text-5xl"></i>
+          <span class="text-xs uppercase font-bold tracking-widest">PDF Document</span>
+        </div>
+        
+        <!-- Type Tag -->
+        <div class="absolute top-3 left-3">
+          <p-tag [value]="file.type === 'contract' ? 'Hợp đồng' : 'Decal'" [severity]="file.type === 'contract' ? 'info' : 'success'"></p-tag>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="p-5">
+        <h3 class="font-bold text-gray-800 dark:text-white truncate mb-1" [pTooltip]="file.name">{{ file.name }}</h3>
+        <p class="text-xs text-gray-500 mb-4">Ngày tải: {{ file.date | date:'dd/MM/yyyy HH:mm' }}</p>
+        
+        <div class="flex items-center gap-2 mb-4 p-2 bg-black/5 rounded-lg border border-black/5">
+          <i class="pi pi-building text-primary text-sm"></i>
+          <span class="text-xs font-medium truncate">{{ file.companyName || 'N/A' }}</span>
+        </div>
+
+        <div class="flex gap-2">
+          <a [href]="file.url" target="_blank" pButton icon="pi pi-eye" label="Xem" [text]="true" size="small" class="flex-1"></a>
+          <p-button icon="pi pi-copy" (onClick)="copyLink(file.url)" [text]="true" size="small" pTooltip="Sao chép link" class="flex-none"></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
