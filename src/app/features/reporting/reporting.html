@@ -1,0 +1,158 @@
+<div class="reporting-container p-6 animate-fade-in">
+  <div class="header-section mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-white mb-1">Báo cáo Tài chính</h1>
+      <p class="text-gray-400">Theo dõi và phân tích doanh thu từ vé xe và quảng cáo.</p>
+    </div>
+    <div class="actions flex gap-3">
+      <p-button label="Xuất Excel" icon="pi pi-file-excel" severity="success" (onClick)="exportExcel()" [loading]="loading()"></p-button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-panel p-6 mb-8 rounded-2xl flex flex-wrap gap-6 items-end">
+    <div class="filter-item flex flex-col gap-2">
+      <label class="text-sm font-medium text-gray-300">Khoảng thời gian</label>
+      <p-datepicker 
+        [(ngModel)]="dateRange" 
+        selectionMode="range" 
+        [readonlyInput]="true" 
+        [showIcon]="true"
+        placeholder="Chọn khoảng thời gian"
+        (onSelect)="onFilterChange()"
+        styleClass="w-full md:w-64">
+      </p-datepicker>
+    </div>
+
+    <div class="filter-item flex flex-col gap-2">
+      <label class="text-sm font-medium text-gray-300">Tuyến xe</label>
+      <p-select 
+        [options]="routes()" 
+        [(ngModel)]="selectedRoute" 
+        optionLabel="routeNumber"
+        [filter]="true"
+        filterBy="routeNumber,stopA,stopB"
+        [showClear]="true" 
+        placeholder="Tất cả các tuyến"
+        (onChange)="onFilterChange()"
+        styleClass="w-full md:w-64">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+            <div>{{ selectedOption.routeNumber }} - {{ selectedOption.stopA }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-route pTemplate="item">
+          <div class="flex flex-col">
+            <span class="font-bold">{{ route.routeNumber }}</span>
+            <small class="text-gray-400">{{ route.stopA }} - {{ route.stopB }}</small>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    <div class="ml-auto">
+      <p-button icon="pi pi-refresh" [loading]="loading()" (onClick)="fetchData()" severity="secondary" rounded="true" text="true"></p-button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="glass-card p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+      <div>
+        <span class="text-gray-400 text-sm font-medium">Doanh thu Vé</span>
+        <h2 class="text-2xl font-bold mt-1">{{ summary()?.totalTicketRevenue | currency:'VND':'symbol':'1.0-0' }}</h2>
+      </div>
+      <div class="mt-4 flex items-center text-xs text-green-400">
+        <i class="pi pi-arrow-up-right mr-1"></i>
+        <span>Tăng trưởng tích cực</span>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+      <div>
+        <span class="text-gray-400 text-sm font-medium">Doanh thu Quảng cáo</span>
+        <h2 class="text-2xl font-bold mt-1">{{ summary()?.totalAdRevenue | currency:'VND':'symbol':'1.0-0' }}</h2>
+      </div>
+      <div class="mt-4 flex items-center text-xs text-blue-400">
+        <i class="pi pi-info-circle mr-1"></i>
+        <span>Từ các hợp đồng decal</span>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+      <div>
+        <span class="text-gray-400 text-sm font-medium">Thuế khấu trừ</span>
+        <h2 class="text-2xl font-bold mt-1 text-red-300">{{ summary()?.taxDeduction | currency:'VND':'symbol':'1.0-0' }}</h2>
+      </div>
+      <div class="mt-4 flex items-center text-xs text-red-400">
+        <i class="pi pi-arrow-down-right mr-1"></i>
+        <span>VAT 10% & TNDN 20%</span>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-primary/20 bg-white/5 flex flex-col justify-between overflow-hidden relative">
+      <div class="relative z-10">
+        <span class="text-gray-400 text-sm font-medium">Lợi nhuận ròng</span>
+        <h2 class="text-2xl font-bold mt-1 text-white">{{ summary()?.netProfit | currency:'VND':'symbol':'1.0-0' }}</h2>
+      </div>
+      <div class="absolute -right-4 -bottom-4 opacity-10">
+        <p-chart type="doughnut" [data]="chartData()" [options]="chartOptions" width="100px" height="100px"></p-chart>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Table -->
+  <div class="glass-panel p-6 rounded-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-semibold">Chi tiết doanh thu</h3>
+      <span class="text-sm text-gray-400" *ngIf="summary()">Báo cáo từ {{ summary()?.date | date:'dd/MM/yyyy' }}</span>
+    </div>
+
+    <p-table 
+      [value]="details()" 
+      [loading]="loading()"
+      [rows]="10" 
+      [paginator]="true" 
+      styleClass="p-datatable-sm"
+      responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Tuyến xe</th>
+          <th>Hành khách</th>
+          <th>Doanh thu Vé</th>
+          <th>Doanh thu QC</th>
+          <th>Thuế</th>
+          <th>Lợi nhuận</th>
+          <th class="text-right">Hành động</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-report>
+        <tr class="hover:bg-white/5 transition-colors">
+          <td>
+            <div class="flex flex-col">
+              <span class="font-bold text-white">{{ report.routeNumber }}</span>
+              <small class="text-gray-400">{{ report.routeName }}</small>
+            </div>
+          </td>
+          <td>{{ report.totalPassengers | number }}</td>
+          <td>{{ report.totalTicketRevenue | currency:'VND':'symbol':'1.0-0' }}</td>
+          <td>{{ report.totalAdRevenue | currency:'VND':'symbol':'1.0-0' }}</td>
+          <td class="text-red-300">{{ report.taxDeduction | currency:'VND':'symbol':'1.0-0' }}</td>
+          <td class="font-bold text-green-400">{{ report.netProfit | currency:'VND':'symbol':'1.0-0' }}</td>
+          <td class="text-right">
+            <p-button icon="pi pi-search" [rounded]="true" [text]="true" severity="secondary"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-8 text-gray-400">
+            Không có dữ liệu báo cáo cho tiêu chí đã chọn.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-toast></p-toast>
