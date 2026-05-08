@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouteService } from '../../../../core/services/route.service';
-import { ShiftService } from '../../../../core/services/shift.service';
-import { BusRoute } from '../../../../core/models/route.model';
-import { ActiveShiftResponse } from '../../../../core/models/shift.model';
+import { RouteService } from '@core/services/route.service';
+import { ShiftService } from '@core/services/shift.service';
+import { BusRoute } from '@core/models/route.model';
+import { ActiveShiftResponse } from '@core/models/shift.model';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';

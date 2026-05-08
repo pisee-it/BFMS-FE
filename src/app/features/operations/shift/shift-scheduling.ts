@@ -7,14 +7,14 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
-import { ShiftService } from '../../../core/services/shift.service';
-import { NodeService } from '../../../core/services/node.service';
-import { BusService } from '../../../core/services/bus.service';
-import { RouteService } from '../../../core/services/route.service';
-import { NodeResponse } from '../../../core/models/node.model';
-import { BusShiftRequest, ShiftResponse, ShiftStatus } from '../../../core/models/shift.model';
-import { Bus } from '../../../core/models/bus.model';
-import { BusRoute } from '../../../core/models/route.model';
+import { ShiftService } from '@core/services/shift.service';
+import { NodeService } from '@core/services/node.service';
+import { BusService } from '@core/services/bus.service';
+import { RouteService } from '@core/services/route.service';
+import { NodeResponse } from '@core/models/node.model';
+import { BusShiftRequest, ShiftResponse, ShiftStatus } from '@core/models/shift.model';
+import { Bus } from '@core/models/bus.model';
+import { BusRoute } from '@core/models/route.model';
 
 @Component({
   selector: 'app-shift-scheduling',

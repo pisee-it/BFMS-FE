@@ -10,8 +10,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { RouteService } from '../../../core/services/route.service';
-import { BusRoute, RouteRequest } from '../../../core/models/route.model';
+import { RouteService } from '@core/services/route.service';
+import { BusRoute, RouteRequest } from '@core/models/route.model';
 
 @Component({
   selector: 'app-route-list',

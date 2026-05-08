@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from '../sidebar/sidebar';
-import { NavbarComponent } from '../navbar/navbar';
-import { LayoutService } from '../../core/services/layout.service';
+import { SidebarComponent } from '@layout/sidebar/sidebar';
+import { NavbarComponent } from '@layout/navbar/navbar';
+import { LayoutService } from '@core/services/layout.service';
 
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

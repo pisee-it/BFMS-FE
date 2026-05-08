@@ -1,10 +1,10 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ShiftService } from '../../../../core/services/shift.service';
-import { RouteService } from '../../../../core/services/route.service';
-import { ActiveShiftResponse } from '../../../../core/models/shift.model';
-import { BusRoute } from '../../../../core/models/route.model';
+import { ShiftService } from '@core/services/shift.service';
+import { RouteService } from '@core/services/route.service';
+import { ActiveShiftResponse, CompleteShiftRequest } from '@core/models/shift.model';
+import { BusRoute } from '@core/models/route.model';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -76,9 +76,9 @@ export class ShiftCompletionComponent implements OnInit {
     const sId = this.shiftId();
     if (!sId) return;
 
-    const data = {
-      totalSingleTickets: this.totalSingleTickets(),
-      totalMonthlyTickets: this.totalMonthlyTickets()
+    const data: CompleteShiftRequest = {
+      total_single_tickets: this.totalSingleTickets(),
+      total_monthly_tickets: this.totalMonthlyTickets()
     };
 
     this.shiftService.completeShift(sId, data).subscribe({

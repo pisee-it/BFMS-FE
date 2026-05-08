@@ -9,10 +9,10 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MessageService } from 'primeng/api';
-import { NodeService } from '../../../core/services/node.service';
-import { RouteService } from '../../../core/services/route.service';
-import { NodeResponse, NodeRequest } from '../../../core/models/node.model';
-import { BusRoute } from '../../../core/models/route.model';
+import { NodeService } from '@core/services/node.service';
+import { RouteService } from '@core/services/route.service';
+import { NodeResponse, NodeRequest } from '@core/models/node.model';
+import { BusRoute } from '@core/models/route.model';
 
 @Component({
   selector: 'app-node-management',

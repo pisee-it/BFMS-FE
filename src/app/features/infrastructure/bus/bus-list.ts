@@ -11,10 +11,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { BusService } from '../../../core/services/bus.service';
-import { RouteService } from '../../../core/services/route.service';
-import { Bus, BusStatus, BusRequest } from '../../../core/models/bus.model';
-import { BusRoute } from '../../../core/models/route.model';
+import { BusService } from '@core/services/bus.service';
+import { RouteService } from '@core/services/route.service';
+import { Bus, BusStatus, BusRequest } from '@core/models/bus.model';
+import { BusRoute } from '@core/models/route.model';
 
 @Component({
   selector: 'app-bus-list',
