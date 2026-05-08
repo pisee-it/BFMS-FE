@@ -75,19 +75,32 @@
         <div class="field">
           <label class="block mb-2 font-medium">Bản scan hợp đồng (.pdf, .jpg, .png) <span class="text-red-500">*</span></label>
           <p-fileupload
-            mode="basic"
+            mode="advanced"
             chooseLabel="Chọn tệp"
-            [auto]="true"
+            uploadLabel="Tải lên"
+            cancelLabel="Hủy"
+            [customUpload]="true"
+            (uploadHandler)="onUpload($event)"
             accept="image/*,application/pdf"
             [maxFileSize]="10000000"
-            (onSelect)="onUpload($event)"
             [disabled]="uploadingFile()"
-          ></p-fileupload>
-          <div *ngIf="uploadedFileUrl()" class="mt-2 flex items-center gap-2 text-green-500">
-            <i class="pi pi-check-circle"></i>
-            <span>Đã tải lên tệp: <a [href]="uploadedFileUrl()" target="_blank" class="underline font-medium">Xem tệp</a></span>
-          </div>
-          <small class="text-red-500" *ngIf="submitted && !uploadedFileUrl()">Vui lòng tải lên bản scan hợp đồng.</small>
+            class="w-full"
+          >
+            <ng-template pTemplate="content">
+              <div *ngIf="uploadedFileUrl()" class="mt-3 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center justify-between">
+                <div class="flex items-center gap-2 text-green-500">
+                  <i class="pi pi-check-circle"></i>
+                  <span class="font-medium">Hợp đồng đã được tải lên thành công</span>
+                </div>
+                <a [href]="uploadedFileUrl()" target="_blank" pButton icon="pi pi-external-link" label="Xem tệp" [text]="true" severity="success" size="small"></a>
+              </div>
+              <div *ngIf="!uploadedFileUrl() && !uploadingFile()" class="flex flex-col items-center justify-center py-4 text-gray-400">
+                <i class="pi pi-cloud-upload text-4xl mb-2"></i>
+                <p>Kéo và thả tệp vào đây hoặc nhấn Chọn tệp</p>
+              </div>
+            </ng-template>
+          </p-fileupload>
+          <small class="text-red-500 mt-2 block" *ngIf="submitted && !uploadedFileUrl()">Vui lòng tải lên bản scan hợp đồng.</small>
         </div>
       </div>
 

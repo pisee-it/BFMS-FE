@@ -87,7 +87,6 @@ export class ContractRegistrationComponent implements OnInit {
       this.uploadingFile.set(true);
       this.fileService.uploadFile(file).subscribe({
         next: (response) => {
-          // BE trả về tên file hoặc URL
           const fileName = response.fileName || response.name || file.name;
           const url = this.fileService.getFileUrl(fileName);
           this.uploadedFileUrl.set(url);
