@@ -11,6 +11,8 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { AdContractService } from '@core/services/ad-contract.service';
 import { AuthService } from '@core/services/auth.service';
 import { AdContract, AdContractStatus } from '@core/models/ad-contract.model';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contract-management',
@@ -23,7 +25,9 @@ import { AdContract, AdContractStatus } from '@core/models/ad-contract.model';
     TagModule,
     ToastModule,
     ConfirmDialogModule,
-    TooltipModule
+    TooltipModule,
+    SelectModule,
+    FormsModule
   ],
   templateUrl: './contract-management.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,14 +46,27 @@ export class ContractManagementComponent implements OnInit {
   totalRecords = signal<number>(0);
   loading = signal<boolean>(false);
 
+  readonly statusOptions = [
+    { label: 'Tất cả trạng thái', value: null },
+    { label: 'Chờ duyệt', value: AdContractStatus.PENDING },
+    { label: 'Đã phê duyệt', value: AdContractStatus.APPROVED },
+    { label: 'Đã thanh toán', value: AdContractStatus.PAID },
+    { label: 'Từ chối', value: AdContractStatus.REJECTED },
+    { label: 'Yêu cầu xóa', value: AdContractStatus.DELETE_REQUESTED }
+  ];
+
+  selectedStatus = signal<AdContractStatus | null>(null);
+  readonly ContractStatus = AdContractStatus;
+
   ngOnInit() {}
 
   loadContracts(event: any) {
     this.loading.set(true);
     const page = event.first / event.rows;
     const size = event.rows;
+    const status = this.selectedStatus();
 
-    this.adContractService.getContracts(page, size).subscribe({
+    this.adContractService.getContracts(page, size, status || undefined).subscribe({
       next: (response) => {
         this.contracts.set(response.content);
         this.totalRecords.set(response.totalElements);
@@ -153,6 +170,10 @@ export class ContractManagementComponent implements OnInit {
     if (url) {
       window.open(url, '_blank');
     }
+  }
+
+  onStatusChange() {
+    this.refreshTable();
   }
 
   refreshTable() {

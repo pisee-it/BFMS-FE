@@ -17,7 +17,9 @@
   <div style="display: flex; align-items: center; gap: 1.5rem;">
     <button class="icon-btn">
       <lucide-angular [img]="BellIcon" [size]="20"></lucide-angular>
-      <span class="badge"></span>
+      @if (notificationsCount() > 0) {
+        <span class="badge">{{ notificationsCount() }}</span>
+      }
     </button>
 
     <div style="position: relative;">

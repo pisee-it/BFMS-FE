@@ -1,7 +1,16 @@
 <div class="p-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Quản lý Hợp đồng Quảng cáo</h1>
-    <p-button label="Đăng ký Hợp đồng" icon="pi pi-plus" routerLink="/advertising/contracts/new" severity="primary"></p-button>
+    <div class="flex gap-4 items-center">
+      <p-select 
+        [options]="statusOptions" 
+        [(ngModel)]="selectedStatus" 
+        (onChange)="onStatusChange()" 
+        placeholder="Lọc theo trạng thái"
+        class="w-64"
+      ></p-select>
+      <p-button label="Đăng ký Hợp đồng" icon="pi pi-plus" routerLink="/advertising/contracts/new" severity="primary"></p-button>
+    </div>
   </div>
 
   <div class="card bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden shadow-xl">
@@ -55,9 +64,31 @@
             <div class="flex gap-2 justify-center">
               <p-button icon="pi pi-file" [rounded]="true" [text]="true" severity="info" (onClick)="viewFile(contract.contractFileUrl)" pTooltip="Xem bản scan"></p-button>
               
-              <!-- Accountant actions -->
+              <!-- Phê duyệt (Accountant / Owner) -->
+              <ng-container *ngIf="userRole() === 'ACCOUNTANT' || userRole() === 'OWNER'">
+                <p-button 
+                  *ngIf="contract.approvalStatus === ContractStatus.PENDING"
+                  icon="pi pi-check" 
+                  [rounded]="true" 
+                  [text]="true" 
+                  severity="success" 
+                  (onClick)="approveContract(contract)" 
+                  pTooltip="Phê duyệt thanh toán"
+                ></p-button>
+                <p-button 
+                  *ngIf="contract.approvalStatus === ContractStatus.PENDING"
+                  icon="pi pi-times" 
+                  [rounded]="true" 
+                  [text]="true" 
+                  severity="danger" 
+                  (onClick)="rejectContract(contract)" 
+                  pTooltip="Từ chối hợp đồng"
+                ></p-button>
+              </ng-container>
+
+              <!-- Yêu cầu xóa (Accountant) -->
               <p-button 
-                *ngIf="userRole() === 'ACCOUNTANT' && contract.approvalStatus !== 'DELETE_REQUESTED'"
+                *ngIf="userRole() === 'ACCOUNTANT' && contract.approvalStatus !== ContractStatus.DELETE_REQUESTED"
                 icon="pi pi-trash" 
                 [rounded]="true" 
                 [text]="true" 
@@ -66,36 +97,16 @@
                 pTooltip="Yêu cầu xóa"
               ></p-button>
 
-              <!-- Owner/Admin actions -->
-              <ng-container *ngIf="userRole() === 'OWNER' || userRole() === 'ADMIN'">
-                <p-button 
-                  *ngIf="contract.approvalStatus === 'PENDING'"
-                  icon="pi pi-check" 
-                  [rounded]="true" 
-                  [text]="true" 
-                  severity="success" 
-                  (onClick)="approveContract(contract)" 
-                  pTooltip="Phê duyệt"
-                ></p-button>
-                <p-button 
-                  *ngIf="contract.approvalStatus === 'PENDING'"
-                  icon="pi pi-times" 
-                  [rounded]="true" 
-                  [text]="true" 
-                  severity="danger" 
-                  (onClick)="rejectContract(contract)" 
-                  pTooltip="Từ chối"
-                ></p-button>
-                <p-button 
-                  *ngIf="contract.approvalStatus === 'DELETE_REQUESTED'"
-                  icon="pi pi-trash" 
-                  [rounded]="true" 
-                  [text]="true" 
-                  severity="danger" 
-                  (onClick)="deleteContract(contract)" 
-                  pTooltip="Xác nhận xóa vĩnh viễn"
-                ></p-button>
-              </ng-container>
+              <!-- Xóa vĩnh viễn (Owner / Admin) -->
+              <p-button 
+                *ngIf="(userRole() === 'OWNER' || userRole() === 'ADMIN') && contract.approvalStatus === ContractStatus.DELETE_REQUESTED"
+                icon="pi pi-trash" 
+                [rounded]="true" 
+                [text]="true" 
+                severity="danger" 
+                (onClick)="deleteContract(contract)" 
+                pTooltip="Xác nhận xóa vĩnh viễn"
+              ></p-button>
             </div>
           </td>
         </tr>
