@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
@@ -55,15 +56,19 @@ export class AdAssignmentComponent implements OnInit {
   }
 
   loadContracts() {
-    // Chỉ lấy các hợp đồng đã được duyệt hoặc đã thanh toán
-    this.adContractService.getContracts(0, 1000, AdContractStatus.APPROVED).subscribe({
-      next: (response) => {
-        const approved = response.content;
-        this.adContractService.getContracts(0, 1000, AdContractStatus.PAID).subscribe({
-          next: (paidResponse) => {
-            this.contracts.set([...approved, ...paidResponse.content]);
-          }
-        });
+    this.loading.set(true);
+    // Lấy song song các hợp đồng đã được duyệt và đã thanh toán
+    forkJoin({
+      approved: this.adContractService.getContracts(0, 1000, AdContractStatus.APPROVED),
+      paid: this.adContractService.getContracts(0, 1000, AdContractStatus.PAID)
+    }).subscribe({
+      next: (results) => {
+        this.contracts.set([...results.approved.content, ...results.paid.content]);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Không thể tải danh sách hợp đồng' });
+        this.loading.set(false);
       }
     });
   }
@@ -73,6 +78,9 @@ export class AdAssignmentComponent implements OnInit {
     this.busService.getBuses(0, 1000, undefined, { status: BusStatus.ACTIVE }).subscribe({
       next: (response) => {
         this.buses.set(response.content);
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Không thể tải danh sách xe buýt' });
       }
     });
   }
