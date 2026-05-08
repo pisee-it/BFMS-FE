@@ -58,6 +58,12 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'advertising',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'ADVERTISING', 'ACCOUNTANT', 'OWNER'] },
+        loadChildren: () => import('@features/advertising/advertising.routes').then(m => m.ADVERTISING_ROUTES)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
