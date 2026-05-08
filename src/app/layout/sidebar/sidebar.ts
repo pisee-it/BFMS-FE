@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, LayoutDashboard, Bus, Route, Users, Settings, LogOut, ChevronLeft, ChevronRight, Calculator } from 'lucide-angular';
-import { LayoutService } from '../../core/services/layout.service';
+import { LayoutService } from '@core/services/layout.service';
 
 interface MenuItem {
   label: string;

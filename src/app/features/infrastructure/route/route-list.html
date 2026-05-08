@@ -1,0 +1,193 @@
+<div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 min-h-screen">
+  <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl overflow-hidden">
+    <p-table
+      #dt
+      [value]="routes()"
+      [lazy]="true"
+      (onLazyLoad)="loadRoutes($event)"
+      [paginator]="true"
+      [rows]="10"
+      [totalRecords]="totalRecords()"
+      [loading]="loading()"
+      [globalFilterFields]="['routeNumber', 'stopA', 'stopB']"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+      [rowsPerPageOptions]="[10, 25, 50]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white m-0">Quản lý Tuyến Xe</h2>
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <span class="p-input-icon-left w-full md:w-64">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="onGlobalFilter(dt, $event)"
+                placeholder="Tìm kiếm tuyến..."
+                class="w-full rounded-xl"
+              />
+            </span>
+            <button
+              pButton
+              label="Thêm mới"
+              icon="pi pi-plus"
+              aria-label="Thêm mới tuyến đường"
+              class="p-button-primary rounded-xl px-4 py-2"
+              (click)="openNew()"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="routeNumber" class="bg-gray-50 dark:bg-gray-700/50">Mã tuyến <p-sortIcon field="routeNumber"></p-sortIcon></th>
+          <th class="bg-gray-50 dark:bg-gray-700/50">Lộ trình (Điểm A - Điểm B)</th>
+          <th pSortableColumn="distanceAB" class="bg-gray-50 dark:bg-gray-700/50 text-center">Cự ly (km) <p-sortIcon field="distanceAB"></p-sortIcon></th>
+          <th class="bg-gray-50 dark:bg-gray-700/50">Thời gian HĐ</th>
+          <th pSortableColumn="price" class="bg-gray-50 dark:bg-gray-700/50 text-right">Giá vé (VNĐ) <p-sortIcon field="price"></p-sortIcon></th>
+          <th class="bg-gray-50 dark:bg-gray-700/50 text-center">Thao tác</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-route>
+        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition-colors">
+          <td>
+            <span class="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 rounded-lg text-sm font-bold">
+              {{ route.routeNumber }}
+            </span>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+              <span class="font-medium">{{ route.stopA }}</span>
+              <i class="pi pi-arrow-right text-gray-400 text-xs"></i>
+              <span class="font-medium">{{ route.stopB }}</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-1 truncate max-w-xs" [title]="route.path">
+              {{ route.path }}
+            </div>
+          </td>
+          <td class="text-center font-mono">
+            {{ route.distanceAB }} km
+          </td>
+          <td>
+            <div class="flex flex-col text-xs">
+              <span class="font-medium text-gray-700 dark:text-gray-300">Bắt đầu: {{ route.operationStart }}</span>
+              <span class="font-medium text-gray-700 dark:text-gray-300">Kết thúc: {{ route.operationEnd }}</span>
+            </div>
+          </td>
+          <td class="text-right font-bold text-primary-600 dark:text-primary-400">
+            {{ route.price | number:'1.0-0' }}
+          </td>
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                aria-label="Chỉnh sửa tuyến đường"
+                class="p-button-text p-button-rounded p-button-info"
+                (click)="editRoute(route)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                aria-label="Xóa tuyến đường"
+                class="p-button-text p-button-rounded p-button-danger"
+                (click)="deleteRoute(route)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-8 text-gray-500">Không tìm thấy dữ liệu tuyến xe.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Dialog Thêm/Sửa -->
+  <p-dialog
+    [(visible)]="routeDialog"
+    [style]="{ width: '600px' }"
+    header="Chi tiết Tuyến Xe"
+    [modal]="true"
+    styleClass="p-fluid"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <ng-template pTemplate="content">
+      <form [formGroup]="routeForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="field col-span-2 md:col-span-1">
+          <label for="routeNumber" class="font-semibold mb-1 block">Mã số tuyến</label>
+          <input type="text" pInputText id="routeNumber" formControlName="routeNumber" placeholder="VD: 01, 20A..." class="rounded-xl" />
+          @if (routeForm.get('routeNumber')?.invalid && routeForm.get('routeNumber')?.touched) {
+            <small class="p-error">Vui lòng nhập mã tuyến.</small>
+          }
+        </div>
+
+        <div class="field col-span-2 md:col-span-1">
+          <label for="price" class="font-semibold mb-1 block">Giá vé (VNĐ)</label>
+          <p-inputNumber id="price" formControlName="price" mode="currency" currency="VND" locale="vi-VN" class="rounded-xl"></p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="stopA" class="font-semibold mb-1 block">Điểm đầu (A)</label>
+          <input type="text" pInputText id="stopA" formControlName="stopA" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label for="stopB" class="font-semibold mb-1 block">Điểm cuối (B)</label>
+          <input type="text" pInputText id="stopB" formControlName="stopB" class="rounded-xl" />
+        </div>
+
+        <div class="field col-span-2">
+          <label for="path" class="font-semibold mb-1 block">Lộ trình chi tiết</label>
+          <textarea pTextarea id="path" formControlName="path" rows="3" class="rounded-xl"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="distanceAB" class="font-semibold mb-1 block">Cự ly A -> B (km)</label>
+          <p-inputNumber id="distanceAB" formControlName="distanceAB" [minFractionDigits]="1" [maxFractionDigits]="2" class="rounded-xl"></p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="distanceBA" class="font-semibold mb-1 block">Cự ly B -> A (km)</label>
+          <p-inputNumber id="distanceBA" formControlName="distanceBA" [minFractionDigits]="1" [maxFractionDigits]="2" class="rounded-xl"></p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="operationStart" class="font-semibold mb-1 block">Thời gian bắt đầu</label>
+          <input type="time" pInputText id="operationStart" formControlName="operationStart" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label for="operationEnd" class="font-semibold mb-1 block">Thời gian kết thúc</label>
+          <input type="time" pInputText id="operationEnd" formControlName="operationEnd" class="rounded-xl" />
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Hủy"
+        icon="pi pi-times"
+        class="p-button-text rounded-xl"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        label="Lưu"
+        icon="pi pi-check"
+        class="p-button-primary rounded-xl"
+        (click)="saveRoute()"
+        [disabled]="routeForm.invalid"
+      ></button>
+    </ng-template>
+  </p-dialog>
+
+</div>

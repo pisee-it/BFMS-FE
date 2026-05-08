@@ -1,0 +1,226 @@
+<div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 min-h-screen">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <!-- Panel chọn Nốt -->
+    <div class="lg:col-span-1">
+      <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl p-4">
+        <h3 class="text-lg font-bold mb-4">Chọn Nốt Xe</h3>
+        
+        <div class="flex flex-col gap-4">
+          <div class="field">
+            <label class="text-xs font-semibold uppercase text-gray-500 mb-1 block">Tuyến xe</label>
+            <p-select
+              [options]="routes()"
+              [(ngModel)]="selectedRoute"
+              optionLabel="routeNumber"
+              placeholder="Chọn tuyến"
+              (onChange)="onRouteSelect($event.value)"
+              class="w-full"
+              styleClass="rounded-xl w-full"
+            ></p-select>
+          </div>
+
+          <div class="field">
+            <label class="text-xs font-semibold uppercase text-gray-500 mb-1 block">Nốt xe</label>
+            <p-select
+              [options]="nodes()"
+              [(ngModel)]="selectedNode"
+              optionLabel="nodeNumber"
+              placeholder="Chọn nốt"
+              (onChange)="onNodeSelect($event.value)"
+              class="w-full"
+              styleClass="rounded-xl w-full"
+              [disabled]="!selectedRoute()"
+            >
+              <ng-template pTemplate="selectedItem">
+                @if (selectedNode()) {
+                  <span>Nốt #{{ selectedNode()?.nodeNumber }} ({{ selectedNode()?.executionDate | date:'dd/MM' }})</span>
+                }
+              </ng-template>
+              <ng-template let-node pTemplate="item">
+                <span>Nốt #{{ node.nodeNumber }} - {{ node.executionDate | date:'dd/MM/yyyy' }}</span>
+              </ng-template>
+            </p-select>
+          </div>
+        </div>
+
+        @if (selectedNode()) {
+          <div class="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
+            <p class="text-xs text-blue-600 dark:text-blue-400 font-bold uppercase mb-2">Thông tin nốt</p>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Tuyến:</span>
+                <span class="font-bold">{{ selectedNode()?.routeName }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Ngày:</span>
+                <span class="font-bold">{{ selectedNode()?.executionDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Tổng khách:</span>
+                <span class="font-bold font-mono">{{ selectedNode()?.totalPassengers }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Bảng danh sách Ca chạy -->
+    <div class="lg:col-span-3">
+      <div class="card bg-white dark:bg-gray-800 border-0 shadow-sm rounded-2xl overflow-hidden">
+        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+          <h2 class="text-xl font-bold">Danh sách Ca Chạy</h2>
+          <button
+            pButton
+            label="Thêm Ca Chạy"
+            icon="pi pi-plus"
+            class="p-button-primary rounded-xl px-4 py-2"
+            (click)="openNew()"
+            [disabled]="!selectedNode()"
+          ></button>
+        </div>
+
+        <p-table
+          [value]="shifts()"
+          [loading]="loading()"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="w-16">Thứ tự</th>
+              <th>Xe (Biển số)</th>
+              <th>Tài xế</th>
+              <th>Giờ xuất bến</th>
+              <th>Hướng</th>
+              <th>Trạng thái</th>
+              <th class="text-right">Doanh thu</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-shift>
+            <tr>
+              <td class="text-center font-bold">#{{ shift.shiftOrder }}</td>
+              <td>
+                <span class="font-mono text-blue-600 dark:text-blue-400 font-bold">{{ shift.busLicensePlate }}</span>
+              </td>
+              <td>{{ shift.driverName }}</td>
+              <td>{{ shift.plannedDepartureTime }}</td>
+              <td>
+                @if (shift.direction === 1) {
+                  <span class="text-xs px-2 py-1 bg-gray-100 rounded">A &rarr; B</span>
+                } @else {
+                  <span class="text-xs px-2 py-1 bg-gray-100 rounded">B &rarr; A</span>
+                }
+              </td>
+              <td>
+                <span [class]="'px-2 py-1 rounded-full text-xs font-bold bg-' + getStatusSeverity(shift.status) + '-100 text-' + getStatusSeverity(shift.status) + '-700'">
+                  {{ shift.status }}
+                </span>
+              </td>
+              <td class="text-right font-bold text-green-600">
+                {{ shift.shiftRevenue | number:'1.0-0' }}
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" class="text-center py-12 text-gray-500">
+                @if (!selectedNode()) {
+                  Vui lòng chọn nốt xe để xem lịch trình.
+                } @else {
+                  Chưa có ca chạy nào được lập lịch cho nốt này.
+                }
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog Lập lịch Ca -->
+  <p-dialog
+    [visible]="shiftDialog()"
+    (visibleChange)="shiftDialog.set($event)"
+    [style]="{ width: '500px' }"
+    header="Lập lịch Ca Chạy Mới"
+    [modal]="true"
+    styleClass="p-fluid"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <ng-template pTemplate="content">
+      <form [formGroup]="shiftForm" class="grid grid-cols-2 gap-4 pt-2">
+        <div class="field col-span-2">
+          <label class="font-semibold mb-1 block">Chọn Xe</label>
+          <p-select
+            [options]="buses()"
+            formControlName="busId"
+            optionLabel="licensePlate"
+            optionValue="id"
+            placeholder="Chọn xe thực hiện"
+            [filter]="true"
+            filterBy="licensePlate"
+            class="rounded-xl"
+          >
+            <ng-template let-bus pTemplate="item">
+              <div class="flex justify-between">
+                <span class="font-bold">{{ bus.licensePlate }}</span>
+                <span class="text-xs text-gray-500">{{ bus.status }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <div class="field col-span-2">
+          <label class="font-semibold mb-1 block">ID Tài xế (Hiện tại nhập tay)</label>
+          <input type="number" pInputText formControlName="driverId" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label class="font-semibold mb-1 block">Thứ tự ca</label>
+          <input type="number" pInputText formControlName="shiftOrder" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label class="font-semibold mb-1 block">Hướng chạy</label>
+          <p-select
+            [options]="directions"
+            formControlName="direction"
+            class="rounded-xl"
+          ></p-select>
+        </div>
+
+        <div class="field">
+          <label class="font-semibold mb-1 block">Giờ xuất bến</label>
+          <input type="time" pInputText formControlName="plannedDepartureTime" class="rounded-xl" />
+        </div>
+
+        <div class="field">
+          <label class="font-semibold mb-1 block">Giờ cập bến dự kiến</label>
+          <input type="time" pInputText formControlName="plannedArrivalTime" class="rounded-xl" />
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Hủy"
+        icon="pi pi-times"
+        class="p-button-text rounded-xl"
+        (click)="shiftDialog.set(false)"
+      ></button>
+      <button
+        pButton
+        label="Lưu lịch trình"
+        icon="pi pi-check"
+        class="p-button-primary rounded-xl"
+        (click)="saveShift()"
+        [disabled]="shiftForm.invalid"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>
