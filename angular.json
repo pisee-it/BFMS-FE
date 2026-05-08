@@ -4,6 +4,8 @@
   "cli": {
     "packageManager": "npm",
     "analytics": "776e448d-7626-4c07-8090-68339a4f6241"
+    "packageManager": "npm",
+    "analytics": "776e448d-7626-4c07-8090-68339a4f6241"
   },
   "newProjectRoot": "projects",
   "projects": {
