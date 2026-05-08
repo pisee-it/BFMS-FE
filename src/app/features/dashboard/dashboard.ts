@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
-import { LucideAngularModule, TrendingUp, Users, Banknote, Wallet, BarChart3, PieChart, Calendar, RefreshCw } from 'lucide-angular';
+import { LucideAngularModule, TrendingUp, Users, Banknote, Wallet, BarChart3, PieChart, Calendar, RefreshCw, Map, Zap } from 'lucide-angular';
 import { ReportService } from '@core/services/report.service';
 import { RevenueResponse } from '@core/models/revenue-report.model';
 import { finalize } from 'rxjs';
@@ -17,7 +17,7 @@ import { finalize } from 'rxjs';
     DecimalPipe
   ],
   template: `
-    <div class="animate-fade-in p-4 lg:p-8 relative min-h-screen overflow-hidden">
+    <div class="animate-fade-in p-4 lg:p-8 relative min-h-screen overflow-hidden pb-20">
       <!-- Background Decorative Elements -->
       <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[120px] -z-10"></div>
       <div class="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-purple-600/10 blur-[100px] -z-10"></div>
@@ -63,7 +63,7 @@ import { finalize } from 'rxjs';
             
             <div>
               <span class="text-sm font-medium text-gray-400 tracking-wide">{{ stat.label }}</span>
-              <div class="text-3xl font-black text-white mt-1.5 flex items-baseline gap-1">
+              <div class="text-3xl font-black text-white mt-1.5">
                 {{ stat.value }}
               </div>
             </div>
@@ -159,6 +159,121 @@ import { finalize } from 'rxjs';
           <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-600/10 blur-[80px] -z-10"></div>
         </div>
       </div>
+
+      <!-- Operation & Route Performance Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Route Performance Table -->
+        <div class="lg:col-span-2 glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h3 class="text-xl font-bold text-white flex items-center gap-3">
+                <lucide-angular [img]="MapIcon" size="22" class="text-emerald-400"></lucide-angular>
+                Hiệu suất Tuyến đường
+              </h3>
+              <p class="text-sm text-gray-400 mt-1">Các tuyến đường có doanh thu cao nhất hôm nay</p>
+            </div>
+            <button class="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">Xem tất cả</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-separate border-spacing-y-3">
+              <thead>
+                <tr class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">
+                  <th class="px-4 py-2">Tuyến đường</th>
+                  <th class="px-4 py-2 text-right">Hành khách</th>
+                  <th class="px-4 py-2 text-right">Doanh thu</th>
+                  <th class="px-4 py-2 text-right">Hiệu suất</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (route of topRoutes; track route.id) {
+                  <tr class="group cursor-pointer">
+                    <td class="px-4 py-4 rounded-l-2xl bg-white/[0.02] border-y border-l border-white/5 group-hover:bg-white/[0.05] group-hover:border-white/10 transition-all">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold border border-blue-500/20">
+                          {{ route.number }}
+                        </div>
+                        <div>
+                          <div class="text-sm font-bold text-white">{{ route.name }}</div>
+                          <div class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">{{ route.type }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-4 bg-white/[0.02] border-y border-white/5 group-hover:bg-white/[0.05] group-hover:border-white/10 text-right text-sm font-semibold text-gray-300 transition-all">
+                      {{ route.passengers | number }}
+                    </td>
+                    <td class="px-4 py-4 bg-white/[0.02] border-y border-white/5 group-hover:bg-white/[0.05] group-hover:border-white/10 text-right text-sm font-bold text-white transition-all">
+                      {{ route.revenue | currency:'VND':'symbol':'1.0-0' }}
+                    </td>
+                    <td class="px-4 py-4 rounded-r-2xl bg-white/[0.02] border-y border-r border-white/5 group-hover:bg-white/[0.05] group-hover:border-white/10 transition-all">
+                      <div class="flex flex-col items-end gap-1.5">
+                        <div class="w-24 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div class="h-full bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all duration-1000" [style.width.%]="route.performance"></div>
+                        </div>
+                        <span class="text-[10px] font-bold text-blue-400">{{ route.performance }}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Operational Insights -->
+        <div class="glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl flex flex-col relative overflow-hidden">
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <lucide-angular [img]="ZapIcon" size="22" class="text-amber-400"></lucide-angular>
+              Thông tin Vận hành
+            </h3>
+            <p class="text-sm text-gray-400 mt-1">Thông báo & Đề xuất hệ thống</p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-2xl bg-green-500/5 border border-green-500/10 hover:border-green-500/30 transition-all group">
+              <div class="flex gap-4">
+                <div class="p-2.5 h-fit rounded-xl bg-green-500/10 text-green-500 group-hover:scale-110 transition-transform">
+                  <lucide-angular [img]="TrendingUpIcon" size="18"></lucide-angular>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-green-400 mb-1">Hiệu suất Tăng</h4>
+                  <p class="text-xs text-gray-400 leading-relaxed">Tuyến 08 có lượng khách tăng 15% so với tuần trước. Đề xuất bổ sung xe vào giờ cao điểm.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all group">
+              <div class="flex gap-4">
+                <div class="p-2.5 h-fit rounded-xl bg-blue-500/10 text-blue-400 group-hover:scale-110 transition-transform">
+                  <lucide-angular [img]="UsersIcon" size="18"></lucide-angular>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-blue-400 mb-1">Hợp đồng Mới</h4>
+                  <p class="text-xs text-gray-400 leading-relaxed">Đã ký kết thành công 3 hợp đồng quảng cáo mới cho quý III. Doanh thu dự kiến tăng 120M VNĐ.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-purple-500/5 border border-purple-500/10 hover:border-purple-500/30 transition-all group">
+              <div class="flex gap-4">
+                <div class="p-2.5 h-fit rounded-xl bg-purple-500/10 text-purple-400 group-hover:scale-110 transition-transform">
+                  <lucide-angular [img]="WalletIcon" size="18"></lucide-angular>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-purple-400 mb-1">Tối ưu Chi phí</h4>
+                  <p class="text-xs text-gray-400 leading-relaxed">Hệ thống gợi ý tối ưu hóa lộ trình tuyến 12 giúp tiết kiệm 5% chi phí nhiên liệu mỗi tháng.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="mt-auto w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2 group">
+            Xem báo cáo chi tiết
+            <lucide-angular [img]="TrendingUpIcon" size="16" class="group-hover:translate-x-1 transition-transform"></lucide-angular>
+          </button>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -205,6 +320,16 @@ export class DashboardComponent implements OnInit {
   readonly PieChartIcon = PieChart;
   readonly CalendarIcon = Calendar;
   readonly RefreshIcon = RefreshCw;
+  readonly MapIcon = Map;
+  readonly ZapIcon = Zap;
+
+  // Mock data for top routes
+  topRoutes = [
+    { id: 1, number: '08', name: 'Bến xe Miền Đông - Bến xe Miền Tây', passengers: 1240, revenue: 8680000, performance: 85, type: 'Nội thành' },
+    { id: 2, number: '56', name: 'Đại học GTVT - Chợ Thủ Đức', passengers: 980, revenue: 6860000, performance: 78, type: 'Nội thành' },
+    { id: 3, number: '150', name: 'Bến xe Chợ Lớn - Ngã 3 Tân Vạn', passengers: 850, revenue: 5950000, performance: 72, type: 'Liên tỉnh' },
+    { id: 4, number: '01', name: 'Bến Thành - Chợ Lớn', passengers: 720, revenue: 5040000, performance: 65, type: 'Nội thành' }
+  ];
 
   quickStats = computed(() => {
     const data = this.revenueData();
