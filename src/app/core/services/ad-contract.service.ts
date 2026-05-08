@@ -30,6 +30,10 @@ export class AdContractService {
     return this.http.put<AdContract>(`${this.apiUrl}/${id}`, contract);
   }
 
+  rejectContract(id: number): Observable<AdContract> {
+    return this.http.patch<AdContract>(`${this.apiUrl}/${id}/reject`, {});
+  }
+
   deleteContract(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

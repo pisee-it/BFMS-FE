@@ -6,8 +6,10 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { AdContractService } from '@core/services/ad-contract.service';
+import { AuthService } from '@core/services/auth.service';
 import { AdContract, AdContractStatus } from '@core/models/ad-contract.model';
 
 @Component({
@@ -20,7 +22,8 @@ import { AdContract, AdContractStatus } from '@core/models/ad-contract.model';
     ButtonModule,
     TagModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
   templateUrl: './contract-management.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,9 +31,12 @@ import { AdContract, AdContractStatus } from '@core/models/ad-contract.model';
 })
 export class ContractManagementComponent implements OnInit {
   private readonly adContractService = inject(AdContractService);
+  private readonly authService = inject(AuthService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly router = inject(Router);
+
+  userRole = this.authService.currentUserRole;
 
   contracts = signal<AdContract[]>([]);
   totalRecords = signal<number>(0);
@@ -72,6 +78,71 @@ export class ContractManagementComponent implements OnInit {
           },
           error: (error) => {
             this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: error.error?.message || 'Không thể gửi yêu cầu xóa' });
+          }
+        });
+      }
+    });
+  }
+
+  approveContract(contract: AdContract) {
+    this.confirmationService.confirm({
+      message: `Phê duyệt hợp đồng của ${contract.companyName}?`,
+      header: 'Phê duyệt hợp đồng',
+      icon: 'pi pi-check-circle',
+      acceptLabel: 'Phê duyệt',
+      rejectLabel: 'Hủy',
+      accept: () => {
+        this.adContractService.approveContract(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã phê duyệt hợp đồng' });
+            this.refreshTable();
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: error.error?.message || 'Không thể phê duyệt' });
+          }
+        });
+      }
+    });
+  }
+
+  rejectContract(contract: AdContract) {
+    this.confirmationService.confirm({
+      message: `Từ chối hợp đồng của ${contract.companyName}?`,
+      header: 'Từ chối hợp đồng',
+      icon: 'pi pi-times-circle',
+      acceptLabel: 'Từ chối',
+      rejectLabel: 'Hủy',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.adContractService.rejectContract(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã từ chối hợp đồng' });
+            this.refreshTable();
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: error.error?.message || 'Không thể từ chối' });
+          }
+        });
+      }
+    });
+  }
+
+  deleteContract(contract: AdContract) {
+    this.confirmationService.confirm({
+      message: `Xóa vĩnh viễn hợp đồng của ${contract.companyName}?`,
+      header: 'Xác nhận xóa vĩnh viễn',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Xóa',
+      rejectLabel: 'Hủy',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.adContractService.deleteContract(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã xóa hợp đồng' });
+            this.refreshTable();
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: error.error?.message || 'Không thể xóa' });
           }
         });
       }

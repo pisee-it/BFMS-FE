@@ -54,8 +54,10 @@
           <td>
             <div class="flex gap-2 justify-center">
               <p-button icon="pi pi-file" [rounded]="true" [text]="true" severity="info" (onClick)="viewFile(contract.contractFileUrl)" pTooltip="Xem bản scan"></p-button>
+              
+              <!-- Accountant actions -->
               <p-button 
-                *ngIf="contract.approvalStatus !== 'DELETE_REQUESTED'"
+                *ngIf="userRole() === 'ACCOUNTANT' && contract.approvalStatus !== 'DELETE_REQUESTED'"
                 icon="pi pi-trash" 
                 [rounded]="true" 
                 [text]="true" 
@@ -63,6 +65,37 @@
                 (onClick)="requestDelete(contract)" 
                 pTooltip="Yêu cầu xóa"
               ></p-button>
+
+              <!-- Owner/Admin actions -->
+              <ng-container *ngIf="userRole() === 'OWNER' || userRole() === 'ADMIN'">
+                <p-button 
+                  *ngIf="contract.approvalStatus === 'PENDING'"
+                  icon="pi pi-check" 
+                  [rounded]="true" 
+                  [text]="true" 
+                  severity="success" 
+                  (onClick)="approveContract(contract)" 
+                  pTooltip="Phê duyệt"
+                ></p-button>
+                <p-button 
+                  *ngIf="contract.approvalStatus === 'PENDING'"
+                  icon="pi pi-times" 
+                  [rounded]="true" 
+                  [text]="true" 
+                  severity="danger" 
+                  (onClick)="rejectContract(contract)" 
+                  pTooltip="Từ chối"
+                ></p-button>
+                <p-button 
+                  *ngIf="contract.approvalStatus === 'DELETE_REQUESTED'"
+                  icon="pi pi-trash" 
+                  [rounded]="true" 
+                  [text]="true" 
+                  severity="danger" 
+                  (onClick)="deleteContract(contract)" 
+                  pTooltip="Xác nhận xóa vĩnh viễn"
+                ></p-button>
+              </ng-container>
             </div>
           </td>
         </tr>
