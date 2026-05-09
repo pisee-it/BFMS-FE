@@ -3,30 +3,53 @@
 @import "primeicons/primeicons.css";
 
 @theme {
-  --color-primary: #ffffff;
-  --color-bg-dark: #0a0a0a;
+  --color-primary: var(--primary);
+  --color-bg-dark: var(--bg-app);
 }
 
 :root {
-  --bg-app: #f8fafc;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-ui: #e2e8f0;
-  --card-bg: #ffffff;
+  /* Core Palette */
+  --indigo-500: #6366f1;
+  --emerald-500: #10b981;
+  --rose-500: #f43f5e;
+  
+  /* Slate Grays */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+
+  /* Semantic Tokens */
+  --bg-app: var(--slate-50);
+  --text-main: var(--slate-900);
+  --text-muted: var(--slate-500);
+  --border-ui: var(--slate-200);
+  --card-bg: rgba(255, 255, 255, 0.8);
   --input-bg: #ffffff;
-  --primary: #3b82f6;
+  --primary: var(--indigo-500);
   --primary-text: #ffffff;
+  --success: var(--emerald-500);
+  --error: var(--rose-500);
 }
 
 .dark {
-  --bg-app: #0a0a0a;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --bg-app: var(--slate-950);
+  --text-main: var(--slate-50);
+  --text-muted: var(--slate-400);
   --border-ui: rgba(255, 255, 255, 0.1);
-  --card-bg: #111111;
+  --card-bg: rgba(15, 23, 42, 0.6);
   --input-bg: rgba(255, 255, 255, 0.05);
-  --primary: #ffffff;
-  --primary-text: #000000;
+  --primary: var(--indigo-500);
+  --primary-text: #ffffff;
+  --success: var(--emerald-500);
+  --error: var(--rose-500);
 }
 
 html, body {
