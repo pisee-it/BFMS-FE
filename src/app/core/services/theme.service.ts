@@ -1,5 +1,6 @@
-import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { StoreService } from './store.service';
 
 export type Theme = 'light' | 'dark';
 
@@ -8,24 +9,15 @@ export type Theme = 'light' | 'dark';
 })
 export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly store = inject(StoreService);
   
-  // Initialize with 'dark' as default since the app is currently styled as dark
-  theme = signal<Theme>('dark');
+  theme = this.store.theme;
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      const savedTheme = localStorage.getItem('theme') as Theme;
-      if (savedTheme) {
-        this.theme.set(savedTheme);
-      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        // Optional: follow system preference if no saved theme
-        // this.theme.set('light');
-      }
-      
-      // Effect to update DOM and localStorage
+      // Effect to update DOM
       effect(() => {
         const currentTheme = this.theme();
-        localStorage.setItem('theme', currentTheme);
         
         if (currentTheme === 'dark') {
           document.documentElement.classList.add('dark');
@@ -39,10 +31,10 @@ export class ThemeService {
   }
 
   toggleTheme() {
-    this.theme.update(t => t === 'light' ? 'dark' : 'light');
+    this.store.setTheme(this.theme() === 'light' ? 'dark' : 'light');
   }
 
   setTheme(theme: Theme) {
-    this.theme.set(theme);
+    this.store.setTheme(theme);
   }
 }

@@ -5,18 +5,21 @@ import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest } from '../models/auth.model';
+import { StoreService } from './store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly apiService = inject(ApiService);
+  private readonly store = inject(StoreService);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
 
   // State management bằng Signals
-  readonly currentUserRole = signal<string | null>(null);
-  readonly isAuthenticated = computed(() => !!this.currentUserRole());
+  // Các tín hiệu trạng thái giờ được quản lý tập trung trong StoreService
+  readonly currentUserRole = this.store.userRole;
+  readonly isAuthenticated = this.store.isAuthenticated;
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
@@ -39,9 +42,7 @@ export class AuthService {
    * Đăng xuất và dọn dẹp bộ nhớ
    */
   logout(): void {
-    this.currentUserRole.set(null);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('role');
+    this.store.clearState();
     this.router.navigate(['/login']);
   }
 
@@ -49,12 +50,8 @@ export class AuthService {
    * Tự động đăng nhập nếu có token hợp lệ trong localStorage
    */
   private autoLogin(): void {
-    const token = localStorage.getItem('accessToken');
-    const role = localStorage.getItem('role');
-
-    if (token && role) {
-      this.currentUserRole.set(role.replace('ROLE_', ''));
-    }
+    // Logic autoLogin hiện tại đã được handle một phần trong StoreService constructor (hydrateState)
+    // Nếu cần logic phức tạp hơn (ví dụ check token expiry) thì thêm vào đây.
   }
 
   /**
@@ -62,9 +59,10 @@ export class AuthService {
    */
   private setSession(authResponse: AuthResponse): void {
     const role = authResponse.role.replace('ROLE_', '');
-    this.currentUserRole.set(role);
-    localStorage.setItem('accessToken', authResponse.accessToken);
-    localStorage.setItem('role', role);
+    this.store.setRole(role);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('accessToken', authResponse.accessToken);
+    }
   }
 
   /**
