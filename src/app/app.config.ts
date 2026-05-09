@@ -7,6 +7,7 @@ import Lara from '@primeuix/themes/lara';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideLottieOptions } from 'ngx-lottie';
 import { authInterceptor } from '@core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -16,6 +17,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
     providePrimeNG({
       theme: {
         preset: Lara,
