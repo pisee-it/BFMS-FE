@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouteService } from '@core/services/route.service';
@@ -23,7 +23,8 @@ import { LucideAngularModule, Bus, Route as RouteIcon, ArrowRight } from 'lucide
     LucideAngularModule
   ],
   templateUrl: './shift-selection.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShiftSelectionComponent {
   private readonly routeService = inject(RouteService);

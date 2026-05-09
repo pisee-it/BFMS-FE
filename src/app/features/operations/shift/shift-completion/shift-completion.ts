@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShiftService } from '@core/services/shift.service';
@@ -23,7 +23,8 @@ import { LucideAngularModule, Ticket, Banknote, Bus, Info } from 'lucide-angular
     LucideAngularModule
   ],
   templateUrl: './shift-completion.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShiftCompletionComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
