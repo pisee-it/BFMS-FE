@@ -1,6 +1,7 @@
 import { Injectable, inject, signal, computed, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from './api.service';
+import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest } from '../models/auth.model';
@@ -9,10 +10,9 @@ import { AuthResponse, LoginRequest } from '../models/auth.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly http = inject(HttpClient);
+  private readonly apiService = inject(ApiService);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly apiUrl = '/api/v1/auth';
 
   // State management bằng Signals
   readonly currentUserRole = signal<string | null>(null);
@@ -28,7 +28,7 @@ export class AuthService {
    * Đăng nhập vào hệ thống
    */
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.apiService.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials).pipe(
       tap(response => {
         this.setSession(response);
       })
