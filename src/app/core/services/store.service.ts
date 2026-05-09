@@ -84,6 +84,27 @@ export class StoreService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('role');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     }
+  }
+
+  /**
+   * Lưu trữ tokens
+   */
+  setTokens(access: string, refresh: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+    }
+  }
+
+  /**
+   * Lấy Refresh Token
+   */
+  get refreshToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('refreshToken');
+    }
+    return null;
   }
 }

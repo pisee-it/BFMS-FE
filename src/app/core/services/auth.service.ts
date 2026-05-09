@@ -55,14 +55,24 @@ export class AuthService {
   }
 
   /**
+   * Làm mới Access Token bằng Refresh Token
+   */
+  refreshToken(): Observable<AuthResponse> {
+    const refreshToken = this.store.refreshToken;
+    return this.apiService.post<AuthResponse>(API_ENDPOINTS.AUTH.REFRESH, { refreshToken }).pipe(
+      tap(response => {
+        this.setSession(response);
+      })
+    );
+  }
+
+  /**
    * Lưu thông tin phiên làm việc
    */
   private setSession(authResponse: AuthResponse): void {
     const role = authResponse.role.replace('ROLE_', '');
     this.store.setRole(role);
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('accessToken', authResponse.accessToken);
-    }
+    this.store.setTokens(authResponse.accessToken, authResponse.refreshToken);
   }
 
   /**
