@@ -37,10 +37,14 @@ export const routes: Routes = [
         children: [
           {
             path: 'nodes',
+            canActivate: [roleGuard],
+            data: { roles: ['ADMIN'] },
             loadComponent: () => import('@features/operations/node/node-management').then(m => m.NodeManagementComponent)
           },
           {
             path: 'shifts',
+            canActivate: [roleGuard],
+            data: { roles: ['ADMIN'] },
             loadComponent: () => import('@features/operations/shift/shift-scheduling').then(m => m.ShiftSchedulingComponent)
           },
           {
