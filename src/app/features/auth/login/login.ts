@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, isDevMode, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
@@ -67,7 +67,9 @@ export class LoginComponent {
             this.errorMessage.set('Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!');
           }
 
-          console.error('Login error:', err);
+          if (isDevMode()) {
+            console.error('Login error:', err);
+          }
         }
       });
     }

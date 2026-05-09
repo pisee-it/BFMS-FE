@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, isDevMode } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 
@@ -15,7 +15,7 @@ export class ApiService {
    */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${path}`, { params })
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err) => this.handleError(err)));
   }
 
   /**
@@ -23,7 +23,7 @@ export class ApiService {
    */
   post<T>(path: string, body: any = {}): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${path}`, body)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err) => this.handleError(err)));
   }
 
   /**
@@ -31,7 +31,7 @@ export class ApiService {
    */
   put<T>(path: string, body: any = {}): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${path}`, body)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err) => this.handleError(err)));
   }
 
   /**
@@ -39,7 +39,7 @@ export class ApiService {
    */
   patch<T>(path: string, body: any = {}): Observable<T> {
     return this.http.patch<T>(`${this.baseUrl}${path}`, body)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err) => this.handleError(err)));
   }
 
   /**
@@ -47,7 +47,7 @@ export class ApiService {
    */
   delete<T>(path: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}${path}`)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err) => this.handleError(err)));
   }
 
   /**
@@ -58,17 +58,28 @@ export class ApiService {
     
     if (error.error instanceof ErrorEvent) {
       // Lỗi phía Client
-      errorMessage = `Lỗi: ${error.error.message}`;
+      errorMessage = isDevMode() ? `Lỗi Client: ${error.error.message}` : 'Lỗi kết nối ứng dụng.';
     } else {
       // Lỗi phía Server
-      if (error.error && error.error.message) {
+      if (error.status === 0) {
+        errorMessage = 'Không thể kết nối tới máy chủ.';
+      } else if (error.error && typeof error.error === 'object' && error.error.message) {
+        // Ưu tiên message từ Backend (AppException)
         errorMessage = error.error.message;
       } else {
-        errorMessage = `Mã lỗi: ${error.status}\nMessage: ${error.message}`;
+        errorMessage = isDevMode() ? `Mã lỗi: ${error.status} - ${error.message}` : 'Lỗi hệ thống từ máy chủ.';
       }
     }
     
-    console.error('ApiService Error:', error);
+    if (isDevMode()) {
+      console.error('ApiService Error Details:', {
+        status: error.status,
+        statusText: error.statusText,
+        url: error.url,
+        error: error.error
+      });
+    }
+
     // Trả về error object chuẩn để các service phía trên có thể xử lý tiếp nếu cần
     return throwError(() => error);
   }
