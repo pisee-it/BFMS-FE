@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -24,7 +24,8 @@ interface FileItem {
     ButtonModule,
     CardModule,
     TagModule,
-    TooltipModule
+    TooltipModule,
+    NgOptimizedImage
   ],
   templateUrl: './file-management.html',
   changeDetection: ChangeDetectionStrategy.OnPush

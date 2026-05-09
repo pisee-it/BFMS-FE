@@ -20,4 +20,8 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 export class DashboardLayoutComponent {
   private readonly layoutService = inject(LayoutService);
   readonly isSidebarCollapsed = this.layoutService.isSidebarCollapsed;
+
+  toggleSidebar(): void {
+    this.layoutService.toggleSidebar();
+  }
 }

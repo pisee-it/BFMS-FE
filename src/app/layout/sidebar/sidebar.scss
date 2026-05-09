@@ -11,6 +11,22 @@
   position: relative;
   z-index: 50;
 
+  @media (max-width: 1024px) {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(0);
+    width: 280px;
+    box-shadow: 40px 0 100px rgba(0, 0, 0, 0.9);
+    background: rgba(10, 10, 10, 0.95);
+
+    &.collapsed {
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+  }
+
   &.collapsed {
     width: 88px;
     

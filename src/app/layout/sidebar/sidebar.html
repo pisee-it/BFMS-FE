@@ -20,6 +20,7 @@
         routerLinkActive="active" 
         class="nav-link"
         [title]="isCollapsed() ? item.label : ''"
+        (click)="onMenuItemClick()"
       >
         <lucide-angular [img]="item.icon" [size]="22" class="nav-icon"></lucide-angular>
         @if (!isCollapsed()) {
@@ -37,6 +38,7 @@
         routerLinkActive="active" 
         class="nav-link"
         [title]="isCollapsed() ? item.label : ''"
+        (click)="onMenuItemClick()"
       >
         <lucide-angular [img]="item.icon" [size]="22" class="nav-icon"></lucide-angular>
         @if (!isCollapsed()) {

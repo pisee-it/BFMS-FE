@@ -42,4 +42,11 @@ export class SidebarComponent {
   toggleSidebar(): void {
     this.layoutService.toggleSidebar();
   }
+
+  onMenuItemClick(): void {
+    // Close sidebar on mobile when a menu item is clicked
+    if (window.innerWidth <= 1024) {
+      this.layoutService.setSidebarCollapsed(true);
+    }
+  }
 }

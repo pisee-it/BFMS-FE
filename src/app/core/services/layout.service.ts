@@ -4,7 +4,16 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class LayoutService {
-  readonly isSidebarCollapsed = signal(false);
+  readonly isSidebarCollapsed = signal(window.innerWidth <= 1024);
+
+  constructor() {
+    // Optional: update on resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 1024) {
+        this.isSidebarCollapsed.set(true);
+      }
+    });
+  }
 
   toggleSidebar(): void {
     this.isSidebarCollapsed.update(state => !state);

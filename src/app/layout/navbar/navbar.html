@@ -1,20 +1,25 @@
-<header class="navbar" style="display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 4.5rem; background: var(--bg-app); backdrop-filter: blur(40px) saturate(180%); border-bottom: 1px solid var(--border-ui); position: sticky; top: 0; z-index: 40; transition: background 0.3s ease, border-color 0.3s ease;">
+<header class="navbar flex items-center justify-between px-4 md:px-8 h-[4.5rem] sticky top-0 z-40 bg-[var(--bg-app)] backdrop-blur-[40px] border-b border-[var(--border-ui)]">
   <!-- Left Area -->
-  <div style="display: flex; align-items: center; gap: 2rem;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <span style="color: var(--text-muted); font-size: 14px; font-weight: 500;">Home</span>
-      <lucide-angular [img]="ArrowIcon" [size]="14" style="color: var(--text-muted);"></lucide-angular>
-      <span style="color: var(--text-main); font-size: 14px; font-weight: 600;">Tổng quan</span>
+  <div class="flex items-center gap-4 md:gap-8">
+    <!-- Mobile Menu Toggle -->
+    <button class="icon-btn lg:hidden" (click)="toggleSidebar()">
+      <lucide-angular [img]="MenuIcon" [size]="20"></lucide-angular>
+    </button>
+
+    <div class="hidden md:flex items-center gap-2.5">
+      <span class="text-xs lg:text-sm text-[var(--text-muted)] font-medium">Home</span>
+      <lucide-angular [img]="ArrowIcon" [size]="14" class="text-[var(--text-muted)]"></lucide-angular>
+      <span class="text-xs lg:text-sm text-[var(--text-main)] font-semibold">Tổng quan</span>
     </div>
 
-    <div class="search-box">
-      <lucide-angular [img]="SearchIcon" [size]="18" style="color: var(--text-muted);"></lucide-angular>
-      <input type="text" placeholder="Tìm kiếm nhanh..." style="background: transparent; border: none; color: var(--text-main); outline: none; margin-left: 10px;" />
+    <div class="search-box hidden sm:flex">
+      <lucide-angular [img]="SearchIcon" [size]="18" class="text-[var(--text-muted)]"></lucide-angular>
+      <input type="text" placeholder="Tìm kiếm nhanh..." class="bg-transparent border-none text-[var(--text-main)] outline-none ml-2.5 w-full text-sm" />
     </div>
   </div>
 
   <!-- Right Area -->
-  <div style="display: flex; align-items: center; gap: 1rem;">
+  <div class="flex items-center gap-2 md:gap-4">
     <!-- Theme Toggle -->
     <button class="icon-btn" (click)="toggleTheme()" [title]="currentTheme() === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
       <lucide-angular [img]="currentTheme() === 'dark' ? SunIcon : MoonIcon" [size]="20"></lucide-angular>
@@ -27,14 +32,14 @@
       }
     </button>
 
-    <div style="position: relative;">
-      <div (click)="toggleUserMenu()" style="display: flex; align-items: center; gap: 1rem; cursor: pointer; padding: 6px 12px; border-radius: 12px; transition: background 0.3s;">
-        <div style="display: flex; flex-direction: column; align-items: flex-end;">
-          <span style="font-size: 14px; font-weight: 700; color: var(--text-main);">Quản trị viên</span>
-          <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Administrator</span>
+    <div class="relative">
+      <div (click)="toggleUserMenu()" class="flex items-center gap-2 md:gap-4 cursor-pointer p-1.5 md:p-2 rounded-xl transition-all hover:bg-white/5">
+        <div class="hidden sm:flex flex-col items-end">
+          <span class="text-sm font-bold text-[var(--text-main)]">Quản trị viên</span>
+          <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase">Administrator</span>
         </div>
-        <div class="avatar">
-          <lucide-angular [img]="UserIcon" [size]="24" style="color: var(--text-main);"></lucide-angular>
+        <div class="avatar shrink-0">
+          <lucide-angular [img]="UserIcon" [size]="24" class="text-[var(--text-main)]"></lucide-angular>
         </div>
       </div>
 

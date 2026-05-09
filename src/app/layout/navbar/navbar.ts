@@ -4,7 +4,8 @@ import { RouterLink } from '@angular/router';
 import { NotificationService } from '@core/services/notification.service';
 import { ThemeService } from '@core/services/theme.service';
 import { interval, Subscription, startWith, switchMap } from 'rxjs';
-import { LucideAngularModule, Bell, Search, User, ChevronRight, LogOut, Settings, UserCircle, Sun, Moon } from 'lucide-angular';
+import { LucideAngularModule, Bell, Search, User, ChevronRight, LogOut, Settings, UserCircle, Sun, Moon, Menu } from 'lucide-angular';
+import { LayoutService } from '@core/services/layout.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +18,7 @@ import { LucideAngularModule, Bell, Search, User, ChevronRight, LogOut, Settings
 export class NavbarComponent implements OnInit, OnDestroy {
   private readonly notificationService = inject(NotificationService);
   private readonly themeService = inject(ThemeService);
+  private readonly layoutService = inject(LayoutService);
   private notificationSub?: Subscription;
 
   readonly BellIcon = Bell;
@@ -28,6 +30,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly LogoutIcon = LogOut;
   readonly SunIcon = Sun;
   readonly MoonIcon = Moon;
+  readonly MenuIcon = Menu;
 
   readonly notificationsCount = this.notificationService.unreadCount;
   readonly currentTheme = this.themeService.theme;
@@ -60,5 +63,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   closeUserMenu(): void {
     this.isUserMenuOpen.set(false);
+  }
+
+  toggleSidebar(): void {
+    this.layoutService.toggleSidebar();
   }
 }
