@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { LucideAngularModule, Bell, Search, User, ChevronRight, LogOut, Settings, UserCircle } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NotificationService } from '@core/services/notification.service';
+import { ThemeService } from '@core/services/theme.service';
 import { interval, Subscription, startWith, switchMap } from 'rxjs';
+import { LucideAngularModule, Bell, Search, User, ChevronRight, LogOut, Settings, UserCircle, Sun, Moon } from 'lucide-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -15,6 +16,7 @@ import { interval, Subscription, startWith, switchMap } from 'rxjs';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   private readonly notificationService = inject(NotificationService);
+  private readonly themeService = inject(ThemeService);
   private notificationSub?: Subscription;
 
   readonly BellIcon = Bell;
@@ -24,8 +26,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly UserCircleIcon = UserCircle;
   readonly SettingsIcon = Settings;
   readonly LogoutIcon = LogOut;
+  readonly SunIcon = Sun;
+  readonly MoonIcon = Moon;
 
   readonly notificationsCount = this.notificationService.unreadCount;
+  readonly currentTheme = this.themeService.theme;
   readonly isUserMenuOpen = signal(false);
 
   readonly breadcrumbs = signal([
@@ -47,6 +52,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   toggleUserMenu(): void {
     this.isUserMenuOpen.update(v => !v);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   closeUserMenu(): void {

@@ -7,24 +7,47 @@
   --color-bg-dark: #0a0a0a;
 }
 
+:root {
+  --bg-app: #f8fafc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-ui: #e2e8f0;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --primary: #3b82f6;
+  --primary-text: #ffffff;
+}
+
+.dark {
+  --bg-app: #0a0a0a;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-ui: rgba(255, 255, 255, 0.1);
+  --card-bg: #111111;
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --primary: #ffffff;
+  --primary-text: #000000;
+}
+
 html, body {
   height: 100%;
   margin: 0;
-  background-color: #0a0a0a;
-  color: white;
+  background-color: var(--bg-app);
+  color: var(--text-main);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Fix PrimeNG dark mode conflicts */
+/* Fix PrimeNG mode conflicts */
 .p-inputtext, .p-password input {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-ui) !important;
 }
 
 .p-button {
-  background: white !important;
-  color: black !important;
+  background: var(--primary) !important;
+  color: var(--primary-text) !important;
   border: none !important;
 }
 
@@ -65,26 +88,37 @@ html, body {
 
 /* Interactive Hover Effects */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-ui);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: var(--bg-app);
+    border-color: var(--primary);
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   }
 }
 
-/* PrimeNG Menu Customization for Dark Mode */
-.p-menu {
-  background: rgba(20, 20, 20, 0.95) !important;
+.dark .glass-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.glassmorphism {
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid var(--border-ui);
+}
+
+
+/* PrimeNG Menu Customization */
+.p-menu {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-ui) !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
   padding: 8px !important;
   min-width: 200px !important;
 
@@ -93,16 +127,16 @@ html, body {
       .p-menu-item-link {
         padding: 10px 12px !important;
         border-radius: 8px !important;
-        color: #9ca3af !important;
+        color: var(--text-muted) !important;
         transition: all 0.2s !important;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.05) !important;
-          color: white !important;
+          background: var(--bg-app) !important;
+          color: var(--text-main) !important;
         }
 
         .p-menu-item-icon {
-          color: #6b7280 !important;
+          color: var(--text-muted) !important;
           margin-right: 12px !important;
         }
 
@@ -114,7 +148,7 @@ html, body {
     }
 
     .p-menu-separator {
-      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      border-top: 1px solid var(--border-ui) !important;
       margin: 6px 0 !important;
     }
   }
