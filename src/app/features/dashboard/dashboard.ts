@@ -46,8 +46,8 @@ import { finalize } from 'rxjs';
       
       <!-- Quick Stats Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        @for (stat of quickStats(); track stat.label) {
-          <div class="stats-card p-6 glassmorphism rounded-3xl border border-white/10 group relative overflow-hidden flex flex-col justify-between">
+        @for (stat of quickStats(); track stat.label; let i = $index) {
+          <div [class]="'stats-card p-6 glassmorphism rounded-3xl border border-white/10 group relative overflow-hidden flex flex-col justify-between animate-slide-up delay-' + ((i + 1) * 100)">
             <div class="flex justify-between items-start mb-6">
               <div class="p-3.5 rounded-2xl shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3" [style.background]="stat.iconBg">
                 <lucide-angular [img]="stat.icon" [size]="24" [style.color]="stat.iconColor"></lucide-angular>
@@ -78,7 +78,7 @@ import { finalize } from 'rxjs';
       <!-- Analysis Section -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         <!-- Main Trend Chart -->
-        <div class="lg:col-span-2 glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="lg:col-span-2 glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden animate-scale-in delay-500">
           <div class="flex items-center justify-between mb-8 relative z-10">
             <div>
               <h3 class="text-xl font-bold text-white flex items-center gap-3">
@@ -113,7 +113,7 @@ import { finalize } from 'rxjs';
         </div>
 
         <!-- Revenue Composition -->
-        <div class="glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl flex flex-col relative overflow-hidden">
+        <div class="glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl flex flex-col relative overflow-hidden animate-scale-in delay-500">
           <div class="mb-10 relative z-10">
             <h3 class="text-xl font-bold text-white flex items-center gap-3">
               <lucide-angular [img]="PieChartIcon" size="22" class="text-purple-400"></lucide-angular>
@@ -161,7 +161,7 @@ import { finalize } from 'rxjs';
       </div>
 
       <!-- Operation & Route Performance Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up delay-500">
         <!-- Route Performance Table -->
         <div class="lg:col-span-2 glassmorphism p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
           <div class="flex items-center justify-between mb-8">
