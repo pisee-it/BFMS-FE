@@ -6,13 +6,11 @@ import { LayoutService } from '@core/services/layout.service';
 
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, NavbarComponent, ToastModule, ConfirmDialogModule],
-  providers: [MessageService, ConfirmationService],
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

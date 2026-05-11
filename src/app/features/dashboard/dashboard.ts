@@ -463,7 +463,8 @@ export class DashboardComponent implements OnInit {
 
   fetchDashboardData() {
     this.loading.set(true);
-    this.reportService.getTotalRevenue('day').pipe(
+    const dateStr = this.today.toISOString().split('T')[0];
+    this.reportService.getTotalRevenue('day', dateStr).pipe(
       finalize(() => this.loading.set(false))
     ).subscribe({
       next: (res) => this.revenueData.set(res),

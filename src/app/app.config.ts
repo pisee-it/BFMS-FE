@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideLottieOptions } from 'ngx-lottie';
 import { authInterceptor } from '@core/interceptors/auth.interceptor';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +28,8 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.dark'
         }
       }
-    })
+    }),
+    MessageService,
+    ConfirmationService
   ]
 };
