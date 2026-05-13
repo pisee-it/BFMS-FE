@@ -30,6 +30,7 @@ import { BusRoute } from '@core/models/route.model';
     DatePickerModule
   ],
   templateUrl: './node-management.html',
+  host: { class: 'block animate-fade-in' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NodeManagementComponent implements OnInit {

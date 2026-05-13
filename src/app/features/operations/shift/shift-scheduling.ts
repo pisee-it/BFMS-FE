@@ -94,16 +94,25 @@ export class ShiftSchedulingComponent implements OnInit {
     });
   }
 
-  onRouteSelect(route: BusRoute) {
+  onRouteSelect(route: BusRoute | null) {
     this.selectedRoute.set(route);
-    this.nodeService.getNodesByRoute(route.id).subscribe({
-      next: (data) => this.nodes.set(data)
-    });
+    if (route) {
+      this.nodeService.getNodesByRoute(route.id).subscribe({
+        next: (data) => this.nodes.set(data)
+      });
+    } else {
+      this.nodes.set([]);
+      this.selectedNode.set(null);
+    }
   }
 
-  onNodeSelect(node: NodeResponse) {
+  onNodeSelect(node: NodeResponse | null) {
     this.selectedNode.set(node);
-    this.loadShifts(node.id);
+    if (node) {
+      this.loadShifts(node.id);
+    } else {
+      this.shifts.set([]);
+    }
   }
 
   loadNodeAndShifts(nodeId: number) {

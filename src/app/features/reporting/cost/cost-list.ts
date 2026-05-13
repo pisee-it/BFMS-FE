@@ -31,6 +31,7 @@ import { SkeletonTableComponent } from '@shared/components/skeleton-table/skelet
     SkeletonTableComponent
   ],
   templateUrl: './cost-list.html',
+  host: { class: 'block animate-fade-in' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CostListComponent implements OnInit {

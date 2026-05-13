@@ -8,7 +8,7 @@ import { UserRequest, UserResponse } from '../models/user.model';
 })
 export class UserService {
   private readonly api = inject(ApiService);
-  private readonly path = '/api/v1/users';
+  private readonly path = '/users';
 
   getAllUsers(): Observable<UserResponse[]> {
     return this.api.get<UserResponse[]>(this.path);

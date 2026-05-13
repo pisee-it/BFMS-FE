@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './contract-management.html',
+  host: { class: 'block animate-fade-in' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService]
 })
@@ -172,7 +173,8 @@ export class ContractManagementComponent implements OnInit {
     }
   }
 
-  onStatusChange() {
+  onStatusChange(value: AdContractStatus | null) {
+    this.selectedStatus.set(value);
     this.refreshTable();
   }
 

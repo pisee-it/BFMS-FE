@@ -130,6 +130,16 @@ export class ReportingComponent implements OnInit {
     }
   }
 
+  onDateRangeChange(value: Date[]) {
+    this.dateRange.set(value);
+    this.fetchData();
+  }
+
+  onRouteSelect(value: BusRoute | null) {
+    this.selectedRoute.set(value);
+    this.fetchData();
+  }
+
   onFilterChange() {
     this.fetchData();
   }

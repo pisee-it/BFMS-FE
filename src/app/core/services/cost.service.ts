@@ -9,7 +9,7 @@ import { CostRequest, CostResponse } from '../models/cost.model';
 })
 export class CostService {
   private readonly api = inject(ApiService);
-  private readonly path = '/api/v1/costs';
+  private readonly path = '/costs';
 
   getCosts(routeId?: number, startDate?: string, endDate?: string): Observable<CostResponse[]> {
     let params = new HttpParams();

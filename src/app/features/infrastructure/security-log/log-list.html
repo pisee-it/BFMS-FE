@@ -1,4 +1,4 @@
-<div class="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 animate-in fade-in duration-500">
+<div class="p-6 glass-card rounded-2xl animate-in fade-in duration-500">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -9,12 +9,12 @@
         </div>
         <div class="flex items-center gap-3">
             <span class="p-input-icon-left">
-                <i class="pi pi-user"></i>
-                <input pInputText type="text" [(ngModel)]="usernameFilter" (input)="onFilter()" placeholder="Lọc theo Username" class="rounded-xl" />
+                <i class="pi pi-user text-gray-400"></i>
+                <input pInputText type="text" [ngModel]="usernameFilter()" (ngModelChange)="onUsernameFilter($event)" placeholder="Lọc theo Username" class="rounded-xl border-gray-200 dark:border-gray-700" />
             </span>
             <span class="p-input-icon-left">
-                <i class="pi pi-bolt"></i>
-                <input pInputText type="text" [(ngModel)]="actionFilter" (input)="onFilter()" placeholder="Lọc theo Hành động" class="rounded-xl" />
+                <i class="pi pi-bolt text-gray-400"></i>
+                <input pInputText type="text" [ngModel]="actionFilter()" (ngModelChange)="onActionFilter($event)" placeholder="Lọc theo Hành động" class="rounded-xl border-gray-200 dark:border-gray-700" />
             </span>
         </div>
     </div>

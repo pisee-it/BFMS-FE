@@ -14,7 +14,8 @@
     <div class="filter-item flex flex-col gap-2">
       <label class="text-sm font-medium text-gray-300">Khoảng thời gian</label>
       <p-datepicker 
-        [(ngModel)]="dateRange" 
+        [ngModel]="dateRange()" 
+        (ngModelChange)="onDateRangeChange($event)"
         selectionMode="range" 
         [readonlyInput]="true" 
         [showIcon]="true"
@@ -28,7 +29,8 @@
       <label class="text-sm font-medium text-gray-300">Tuyến xe</label>
       <p-select 
         [options]="routes()" 
-        [(ngModel)]="selectedRoute" 
+        [ngModel]="selectedRoute()" 
+        (ngModelChange)="onRouteSelect($event)"
         optionLabel="routeNumber"
         [filter]="true"
         filterBy="routeNumber,stopA,stopB"

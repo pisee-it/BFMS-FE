@@ -18,6 +18,7 @@ import { SkeletonTableComponent } from '@shared/components/skeleton-table/skelet
     SkeletonTableComponent
   ],
   templateUrl: './log-list.html',
+  host: { class: 'block animate-fade-in' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogListComponent implements OnInit {
@@ -53,7 +54,13 @@ export class LogListComponent implements OnInit {
     });
   }
 
-  onFilter() {
+  onUsernameFilter(value: string) {
+    this.usernameFilter.set(value);
+    this.loadLogs();
+  }
+
+  onActionFilter(value: string) {
+    this.actionFilter.set(value);
     this.loadLogs();
   }
 }

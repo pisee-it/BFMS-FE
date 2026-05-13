@@ -9,7 +9,7 @@ import { SecurityLogResponse } from '../models/security-log.model';
 })
 export class SecurityService {
   private readonly api = inject(ApiService);
-  private readonly path = '/api/v1/security-logs';
+  private readonly path = '/security-logs';
 
   getLogs(username?: string, action?: string, page: number = 0, size: number = 20): Observable<any> {
     let params = new HttpParams()

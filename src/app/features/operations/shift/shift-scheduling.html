@@ -10,10 +10,10 @@
             <label class="text-xs font-semibold uppercase text-gray-500 mb-1 block">Tuyến xe</label>
             <p-select
               [options]="routes()"
-              [(ngModel)]="selectedRoute"
+              [ngModel]="selectedRoute()"
+              (ngModelChange)="onRouteSelect($event)"
               optionLabel="routeNumber"
               placeholder="Chọn tuyến"
-              (onChange)="onRouteSelect($event.value)"
               class="w-full"
               styleClass="rounded-xl w-full"
             ></p-select>
@@ -23,10 +23,10 @@
             <label class="text-xs font-semibold uppercase text-gray-500 mb-1 block">Nốt xe</label>
             <p-select
               [options]="nodes()"
-              [(ngModel)]="selectedNode"
+              [ngModel]="selectedNode()"
+              (ngModelChange)="onNodeSelect($event)"
               optionLabel="nodeNumber"
               placeholder="Chọn nốt"
-              (onChange)="onNodeSelect($event.value)"
               class="w-full"
               styleClass="rounded-xl w-full"
               [disabled]="!selectedRoute()"

@@ -50,7 +50,8 @@
         </div>
         
         <p-inputNumber 
-          [(ngModel)]="totalSingleTickets" 
+          [ngModel]="totalSingleTickets()" 
+          (ngModelChange)="totalSingleTickets.set($event)"
           [showButtons]="true" 
           buttonLayout="horizontal" 
           spinnerMode="horizontal" 
@@ -75,7 +76,8 @@
         </div>
         
         <p-inputNumber 
-          [(ngModel)]="totalMonthlyTickets" 
+          [ngModel]="totalMonthlyTickets()" 
+          (ngModelChange)="totalMonthlyTickets.set($event)"
           [showButtons]="true" 
           buttonLayout="horizontal" 
           spinnerMode="horizontal" 

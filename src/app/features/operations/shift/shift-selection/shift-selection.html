@@ -12,7 +12,7 @@
     <label class="mb-2 block text-sm font-medium text-gray-400">Chọn Tuyến Đường</label>
     <p-select
       [options]="routes()"
-      [(ngModel)]="selectedRoute"
+      [ngModel]="selectedRoute()"
       (ngModelChange)="onRouteSelect($event)"
       optionLabel="routeNumber"
       placeholder="Chọn một tuyến"
