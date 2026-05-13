@@ -31,6 +31,18 @@ export const routes: Routes = [
         loadComponent: () => import('@features/infrastructure/route/route-list').then(m => m.RouteListComponent)
       },
       {
+        path: 'users',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadChildren: () => import('@features/infrastructure/user/user.routes').then(m => m.USER_ROUTES)
+      },
+      {
+        path: 'logs',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () => import('@features/infrastructure/security-log/log-list').then(m => m.LogListComponent)
+      },
+      {
         path: 'operations',
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] },
@@ -70,8 +82,8 @@ export const routes: Routes = [
       {
         path: 'reporting',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'OWNER'] },
-        loadComponent: () => import('@features/reporting/reporting.component').then(m => m.ReportingComponent)
+        data: { roles: ['ADMIN', 'OWNER', 'ACCOUNTANT'] },
+        loadChildren: () => import('@features/reporting/reporting.routes').then(m => m.REPORTING_ROUTES)
       },
       {
         path: '',

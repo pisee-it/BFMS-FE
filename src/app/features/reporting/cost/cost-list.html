@@ -1,0 +1,111 @@
+<div class="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 animate-in fade-in duration-500">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="pi pi-wallet text-orange-500"></i>
+                Chi phí Vận hành
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Quản lý các khoản chi phí phát sinh theo tuyến</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <p-button label="Thêm chi phí" icon="pi pi-plus" (onClick)="openNew()" severity="warn" [rounded]="true"></p-button>
+        </div>
+    </div>
+
+    @if (loading()) {
+        <app-skeleton-table [rows]="10" [columns]="6"></app-skeleton-table>
+    } @else {
+        <p-table #dt [value]="costs()" [rows]="10" [paginator]="true" 
+                [rowHover]="true" dataKey="id"
+                currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} bản ghi" 
+                [showCurrentPageReport]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-16">ID</th>
+                    <th>Tuyến</th>
+                    <th>Loại chi phí</th>
+                    <th>Nội dung</th>
+                    <th pSortableColumn="amount">Số tiền <p-sortIcon field="amount"></p-sortIcon></th>
+                    <th pSortableColumn="costDate">Ngày ghi nhận <p-sortIcon field="costDate"></p-sortIcon></th>
+                    <th class="w-32">Thao tác</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-cost>
+                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
+                    <td>{{cost.id}}</td>
+                    <td>
+                        <span class="font-bold text-blue-600">Tuyến {{cost.routeNumber}}</span>
+                    </td>
+                    <td>
+                        <span [class]="getCostTypeClass(cost.costType)">
+                            {{cost.costType}}
+                        </span>
+                    </td>
+                    <td>{{cost.description}}</td>
+                    <td>
+                        <span class="font-bold text-red-500">{{cost.amount | number}} VNĐ</span>
+                    </td>
+                    <td>{{cost.costDate | date:'dd/MM/yyyy'}}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="primary" (onClick)="editCost(cost)"></p-button>
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (onClick)="deleteCost(cost)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center p-12 text-gray-500">
+                        Chưa có dữ liệu chi phí nào được ghi nhận.
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    }
+</div>
+
+<p-dialog [(visible)]="costDialog" [style]="{width: '500px'}" [header]="costForm.get('id')?.value ? 'Cập nhật Chi phí' : 'Ghi nhận Chi phí Mới'" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="costForm" class="flex flex-col gap-4 mt-2">
+            <div class="field">
+                <label for="route" class="font-bold">Tuyến xe <span class="text-red-500">*</span></label>
+                <p-select [options]="routes()" formControlName="routeId" optionLabel="routeNumber" optionValue="id" placeholder="Chọn tuyến xe"></p-select>
+                @if (submitted && costForm.get('routeId')?.errors) {
+                    <small class="p-error">Vui lòng chọn tuyến xe.</small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="costType" class="font-bold">Loại chi phí <span class="text-red-500">*</span></label>
+                <p-select [options]="costTypes" formControlName="costType" optionLabel="label" optionValue="value" placeholder="Chọn loại chi phí"></p-select>
+            </div>
+
+            <div class="field">
+                <label for="amount" class="font-bold">Số tiền (VNĐ) <span class="text-red-500">*</span></label>
+                <p-inputNumber id="amount" formControlName="amount" [min]="0" mode="currency" currency="VND" locale="vi-VN"></p-inputNumber>
+                @if (submitted && costForm.get('amount')?.errors) {
+                    <small class="p-error">Số tiền tối thiểu là 1,000 VNĐ.</small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="costDate" class="font-bold">Ngày ghi nhận <span class="text-red-500">*</span></label>
+                <p-datePicker id="costDate" formControlName="costDate" dateFormat="dd/mm/yy" [showIcon]="true"></p-datePicker>
+            </div>
+
+            <div class="field">
+                <label for="description" class="font-bold">Mô tả chi tiết <span class="text-red-500">*</span></label>
+                <textarea pInputTextarea id="description" formControlName="description" rows="3" class="w-full rounded-xl"></textarea>
+                @if (submitted && costForm.get('description')?.errors) {
+                    <small class="p-error">Vui lòng nhập mô tả chi phí.</small>
+                }
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Hủy" icon="pi pi-times" [text]="true" (onClick)="hideDialog()"></p-button>
+        <p-button label="Lưu thông tin" icon="pi pi-check" (onClick)="saveCost()" severity="warn"></p-button>
+    </ng-template>
+</p-dialog>

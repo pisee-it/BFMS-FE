@@ -1,0 +1,75 @@
+<div class="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 animate-in fade-in duration-500">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="pi pi-shield text-blue-500"></i>
+                Nhật ký Bảo mật
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Theo dõi các hoạt động quan trọng của hệ thống</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="p-input-icon-left">
+                <i class="pi pi-user"></i>
+                <input pInputText type="text" [(ngModel)]="usernameFilter" (input)="onFilter()" placeholder="Lọc theo Username" class="rounded-xl" />
+            </span>
+            <span class="p-input-icon-left">
+                <i class="pi pi-bolt"></i>
+                <input pInputText type="text" [(ngModel)]="actionFilter" (input)="onFilter()" placeholder="Lọc theo Hành động" class="rounded-xl" />
+            </span>
+        </div>
+    </div>
+
+    @if (loading()) {
+        <app-skeleton-table [rows]="10" [columns]="5"></app-skeleton-table>
+    } @else {
+        <p-table [value]="logs()" [rows]="20" [paginator]="true" [lazy]="true"
+                (onLazyLoad)="loadLogs($event)" [totalRecords]="totalRecords()"
+                [rowHover]="true" dataKey="id"
+                class="modern-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-16">ID</th>
+                    <th class="w-48">Thời gian</th>
+                    <th class="w-48">Người dùng</th>
+                    <th class="w-64">Hành động</th>
+                    <th>Chi tiết</th>
+                    <th class="w-40">Địa chỉ IP</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-log>
+                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
+                    <td>{{log.id}}</td>
+                    <td>
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                            {{log.createdAt | date:'dd/MM/yyyy HH:mm:ss'}}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-user text-gray-400 text-xs"></i>
+                            <span class="font-bold text-blue-600">{{log.username || 'Hệ thống'}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-xs font-mono">
+                            {{log.action}}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">{{log.details}}</span>
+                    </td>
+                    <td>
+                        <span class="text-xs font-mono text-gray-500">{{log.ipAddress}}</span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center p-12 text-gray-500">
+                        Không tìm thấy nhật ký nào phù hợp.
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    }
+</div>

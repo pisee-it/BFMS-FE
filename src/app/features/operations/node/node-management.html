@@ -76,14 +76,38 @@
             </span>
           </td>
           <td class="text-center">
-            <button
-              pButton
-              icon="pi pi-calendar-plus"
-              label="Lập lịch"
-              class="p-button-text p-button-sm rounded-lg"
-              [routerLink]="['/operations/shifts']"
-              [queryParams]="{ nodeId: node.id }"
-            ></button>
+            <div class="flex items-center justify-center gap-1">
+              <button
+                pButton
+                icon="pi pi-calendar-plus"
+                [text]="true"
+                pTooltip="Lập lịch"
+                tooltipPosition="top"
+                class="p-button-sm rounded-lg"
+                [routerLink]="['/operations/shifts']"
+                [queryParams]="{ nodeId: node.id }"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-pencil"
+                [text]="true"
+                pTooltip="Sửa"
+                tooltipPosition="top"
+                severity="secondary"
+                class="p-button-sm rounded-lg"
+                (click)="editNode(node)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                [text]="true"
+                pTooltip="Xóa"
+                tooltipPosition="top"
+                severity="danger"
+                class="p-button-sm rounded-lg"
+                (click)="deleteNode(node)"
+              ></button>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -107,7 +131,7 @@
     [visible]="nodeDialog()"
     (visibleChange)="nodeDialog.set($event)"
     [style]="{ width: '450px' }"
-    header="Tạo Nốt Xe Mới"
+    [header]="nodeForm.get('id')?.value ? 'Cập nhật Nốt Xe' : 'Tạo Nốt Xe Mới'"
     [modal]="true"
     styleClass="p-fluid"
     [draggable]="false"
@@ -149,7 +173,7 @@
       ></button>
       <button
         pButton
-        label="Tạo Nốt"
+        [label]="nodeForm.get('id')?.value ? 'Cập nhật' : 'Tạo Nốt'"
         icon="pi pi-check"
         class="p-button-primary rounded-xl"
         (click)="saveNode()"

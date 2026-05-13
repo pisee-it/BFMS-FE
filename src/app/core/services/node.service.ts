@@ -22,4 +22,12 @@ export class NodeService {
   createNode(routeId: number, data: NodeRequest): Observable<NodeResponse> {
     return this.http.post<NodeResponse>(`${this.apiUrl}/routes/${routeId}/nodes`, data);
   }
+
+  updateNode(nodeId: number, data: NodeRequest): Observable<NodeResponse> {
+    return this.http.put<NodeResponse>(`${this.apiUrl}/nodes/${nodeId}`, data);
+  }
+
+  deleteNode(nodeId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/nodes/${nodeId}`);
+  }
 }
